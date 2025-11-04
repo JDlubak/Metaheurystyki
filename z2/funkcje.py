@@ -26,30 +26,42 @@ FUNCTIONS = {
     }
 }
 
-def smith_simulator(func_id: int, M: int, T0: float, k: float):
+def delta(func1, func2):
+    return func2 - func1
+
+def make_acceptation_critter(func1, func2, temperature):
+    if delta(func1, func2) >= 0:
+        return 1
+    elif delta(func1, func2) < 0:
+        return math.exp(delta(func1, func2) / temperature)
+
+def load_function_config(func_id):
     if func_id not in FUNCTIONS:
         raise ValueError("Niepoprawny wybór funkcji (1 lub 2).")
+    config = FUNCTIONS[func_id]
+    return config
 
-    cfg = FUNCTIONS[func_id]
-    f = cfg["func"]
-    min_x, max_x = cfg["range"]
+def sa_algorithm(function_id: int, epochs: int, temperature: float, cooling_factor: float, number_of_attempts: int):
+    config = load_function_config(function_id)
+    function = config["func"]
+    min_x, max_x = config["range"]
 
     x = random.uniform(min_x, max_x)
-    fx = f(x)
-    x_best = x
-    fx_best = fx
+    fx = function(x)
+    temp = temperature
 
-    for i in range(M):
-        x_new = x + random.uniform(min_x/10, max_x/10)
-        x_new = max(min_x, min(max_x, x_new))
-        fx_new = f(x_new)
+    for epoch in range(epochs):
+        for attempt in range(number_of_attempts):
+            x_1 = max(x - (2 * temp), min_x)
+            x_2 = min(x + (2 * temp), max_x)
 
-        delta = fx_new - fx
-        if delta > 0 or random.uniform(0,1) < math.exp(delta/T0):
-            x = x_new
-            fx = fx_new
-            if fx > fx_best:
-                fx_best = fx
-                x_best = x
-        T0 *= k
-    return x_best, fx_best
+            x_new = random.uniform(x_1, x_2)
+            fx_new = function(x_new)
+
+            acceptation_critter = make_acceptation_critter(fx, fx_new, temp)
+
+            if acceptation_critter > random.uniform(0,1):
+                x = x_new
+
+        temp *= cooling_factor
+    return x, function(x)
