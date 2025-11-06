@@ -1,4 +1,4 @@
-from z2.funkcje import load_function_config
+from z2.functions import load_function_config
 import matplotlib.pyplot as plt
 import numpy as np
 
@@ -18,7 +18,7 @@ def drawPlot(function_id, label, title, color):
     plt.show()
 
 
-def drawPlots():
+def draw_plots():
     drawPlot(1,
              "f(x) - far_extremum",
              "Wykres Funkcji 1: far_extremum_function",

@@ -1,32 +1,18 @@
-from z2.funkcje import sa_algorithm
-from z2.plot import drawPlots
+from z2.sa_algorithm import sa_algorithm
+from z2.plot import draw_plots
+from z2.print import get_parameters, print_analysis
 
 
 def main():
-    drawPlots()
-    print("Wybierz funkcję:")
-    print("1 – Przyklad 3")
-    print("2 – Przyklad 4")
-    func_id = int(input("Podaj numer funkcji: "))
-    epochs = int(input("Podaj liczbę epok: "))
-    number_of_attempts = int(input("Podaj ilość prób w epoce: "))
-    temperature = float(input("Podaj temperaturę początkową: "))
-    alpha = float(input("Podaj współczynnik chłodzenia alpha (np. 0.95): "))
-    k = float(input("Podaj współczynnik k: "))
+    draw_plots()
 
-    x, fx, solutions = sa_algorithm(func_id, epochs, temperature, alpha, number_of_attempts, k)
-    print(f"Maksimum globalne jest: {x: .3f} = {fx: .3f}")
-    print(len(solutions))
+    (func_id, epochs, number_of_attempts,
+     temperature, alpha, k) = get_parameters()
 
-    x = 0
-    fx_best = solutions[0]
-    for i in range(len(solutions) - 1):
-        if solutions[i + 1] > solutions[i]:
-            if fx_best < solutions[i + 1]:
-                fx_best = solutions[i + 1]
-                x += 1
-    print(x)
-    print(fx_best)
+    x, fx, solutions = sa_algorithm(func_id, epochs, temperature,
+                                    alpha, number_of_attempts, k)
+
+    print_analysis(x, fx, solutions)
 
 
 while True:
