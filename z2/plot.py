@@ -47,9 +47,9 @@ def draw_solutions(function_id, solutions: list[tuple[float, float]], x_last:flo
 
     sol_x = [s[0] for s in solutions]
     sol_y = [s[1] for s in solutions]
-    plt.scatter(sol_x, sol_y, color="black", label='Rozwiązania')
+    plt.scatter(sol_x, sol_y, color="black", label='Wybierane rozwiązania')
 
-    plt.scatter(x_last, y_last, color="red", s=150, edgecolors="black", linewidths=2)
+    plt.scatter(x_last, y_last, color="red", s=150, edgecolors="black", linewidths=2, label="Ostatnie rozwiązanie")
 
     plt.xlabel("x")
     plt.ylabel("f(x)")
