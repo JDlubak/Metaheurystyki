@@ -1,6 +1,9 @@
 import math
 import random
 
+from numpy.f2py.crackfortran import sourcecodeform
+
+
 # Funkcja z rozdziału 3 przedzial [-150,150]
 def far_extremum_function(x: float) -> float:
     if -105 < x < -95:
@@ -38,13 +41,17 @@ def load_function_config(func_id):
     config = FUNCTIONS[func_id]
     return config
 
-def sa_algorithm(function_id: int, epochs: int, temperature: float, cooling_factor: float, number_of_attempts: int, k: float) -> float:
+def sa_algorithm(function_id: int, epochs: int, temperature: float, cooling_factor: float, number_of_attempts: int, k: float):
     config = load_function_config(function_id)
     function = config["func"]
     min_x, max_x = config["range"]
 
     x = random.uniform(min_x, max_x)
     temp = temperature
+
+    solutions = []
+    solutions.append(function(x))
+
 
     for epoch in range(epochs):
         for attempt in range(number_of_attempts):
@@ -60,7 +67,7 @@ def sa_algorithm(function_id: int, epochs: int, temperature: float, cooling_fact
 
             if acceptation_critter == 1 or acceptation_critter > random.uniform(0,1):
                 x = x_new
-
+                solutions.append(fx_new)
 
         temp *= cooling_factor
-    return x, function(x)
+    return x, function(x), solutions
