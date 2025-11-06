@@ -30,7 +30,7 @@ def print_analysis(x, fx, solutions, time):
     x = 0
     fx_best = solutions[0][1]
     for i in range(len(solutions) - 1):
-        if solutions[i + 1] > solutions[i]:
+        if solutions[i + 1][1] > solutions[i][1]:
             if fx_best < solutions[i + 1][1]:
                 fx_best = solutions[i + 1][1]
                 x += 1
