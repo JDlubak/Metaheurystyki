@@ -1,5 +1,5 @@
 from z2.sa_algorithm import sa_algorithm
-from z2.plot import draw_plots
+from z2.plot import draw_plots, draw_solutions
 from z2.print import get_parameters, print_analysis
 
 draw_plots()
@@ -20,3 +20,5 @@ while True:
 
     print_analysis(x, fx, solutions, time)
     first_run = False
+
+    draw_solutions(func_id, solutions, x, fx)
