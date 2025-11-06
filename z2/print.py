@@ -1,14 +1,24 @@
+import sys
+
+
 def get_parameters() -> tuple[int, int, int, float, float, float]:
     print("Wybierz funkcję:")
     print("1 – Przyklad 3")
     print("2 – Przyklad 4")
-    func_id = int(input("Podaj numer funkcji: "))
-    epochs = int(input("Podaj liczbę epok: "))
-    number_of_attempts = int(input("Podaj ilość prób w epoce: "))
-    temperature = float(input("Podaj temperaturę początkową: "))
-    alpha = float(
-        input("Podaj współczynnik chłodzenia alpha (np. 0.95): "))
-    k = float(input("Podaj współczynnik k: "))
+    try:
+        while True:
+            func_id = int(input("Podaj numer funkcji: "))
+            if func_id in [1, 2]:
+                break
+        epochs = int(input("Podaj liczbę epok: "))
+        number_of_attempts = int(input("Podaj ilość prób w epoce: "))
+        temperature = float(input("Podaj temperaturę początkową: "))
+        alpha = float(
+            input("Podaj współczynnik chłodzenia alpha (np. 0.95): "))
+        k = float(input("Podaj współczynnik k: "))
+    except ValueError:
+        print("Błędny parametr wejściowy!")
+        sys.exit(1)
     return func_id, epochs, number_of_attempts, temperature, alpha, k
 
 
