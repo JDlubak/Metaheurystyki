@@ -13,9 +13,11 @@ def far_extremum_function(x: float) -> float:
     else:
         return 0
 
+
 # Funkcja z rozdziału 4 przedzial [-1,2]
 def close_extremum_function(x: float) -> float:
     return x * math.sin(10 * math.pi * x) + 1
+
 
 FUNCTIONS = {
     1: {
@@ -28,12 +30,14 @@ FUNCTIONS = {
     }
 }
 
-def make_acceptation_critter(fx, fx_new, temperature, k = 0.1):
+
+def make_acceptation_critter(fx, fx_new, temperature, k=0.1):
     delta = fx_new - fx
     if delta >= 0:
         return 1
     else:
         return math.exp(delta / (k * temperature))
+
 
 def load_function_config(func_id):
     if func_id not in FUNCTIONS:
@@ -41,7 +45,9 @@ def load_function_config(func_id):
     config = FUNCTIONS[func_id]
     return config
 
-def sa_algorithm(function_id: int, epochs: int, temperature: float, cooling_factor: float, number_of_attempts: int, k: float):
+
+def sa_algorithm(function_id: int, epochs: int, temperature: float, cooling_factor: float, number_of_attempts: int,
+                 k: float):
     config = load_function_config(function_id)
     function = config["func"]
     min_x, max_x = config["range"]
@@ -51,7 +57,6 @@ def sa_algorithm(function_id: int, epochs: int, temperature: float, cooling_fact
 
     solutions = []
     solutions.append(function(x))
-
 
     for epoch in range(epochs):
         for attempt in range(number_of_attempts):
@@ -65,7 +70,7 @@ def sa_algorithm(function_id: int, epochs: int, temperature: float, cooling_fact
 
             acceptation_critter = make_acceptation_critter(fx, fx_new, temp, k)
 
-            if acceptation_critter == 1 or acceptation_critter > random.uniform(0,1):
+            if acceptation_critter == 1 or acceptation_critter > random.uniform(0, 1):
                 x = x_new
                 solutions.append(fx_new)
 

@@ -28,6 +28,6 @@ def main():
     print(x)
     print(fx_best)
 
+
 while True:
     main()
-
