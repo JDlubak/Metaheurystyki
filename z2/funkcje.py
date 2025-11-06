@@ -14,7 +14,6 @@ def far_extremum_function(x: float) -> float:
 def close_extremum_function(x: float) -> float:
     return x * math.sin(10 * math.pi * x) + 1
 
-
 FUNCTIONS = {
     1: {
         "func": far_extremum_function,
@@ -26,14 +25,12 @@ FUNCTIONS = {
     }
 }
 
-def delta(func1, func2):
-    return func2 - func1
-
-def make_acceptation_critter(func1, func2, temperature):
-    if delta(func1, func2) >= 0:
+def make_acceptation_critter(fx, fx_new, temperature, k = 0.1):
+    delta = fx_new - fx
+    if delta >= 0:
         return 1
-    elif delta(func1, func2) < 0:
-        return math.exp(delta(func1, func2) / temperature)
+    else:
+        return math.exp(delta / (k * temperature))
 
 def load_function_config(func_id):
     if func_id not in FUNCTIONS:
@@ -41,27 +38,29 @@ def load_function_config(func_id):
     config = FUNCTIONS[func_id]
     return config
 
-def sa_algorithm(function_id: int, epochs: int, temperature: float, cooling_factor: float, number_of_attempts: int):
+def sa_algorithm(function_id: int, epochs: int, temperature: float, cooling_factor: float, number_of_attempts: int, k: float) -> float:
     config = load_function_config(function_id)
     function = config["func"]
     min_x, max_x = config["range"]
 
     x = random.uniform(min_x, max_x)
-    fx = function(x)
     temp = temperature
 
     for epoch in range(epochs):
         for attempt in range(number_of_attempts):
+            fx = function(x)
             x_1 = max(x - (2 * temp), min_x)
             x_2 = min(x + (2 * temp), max_x)
 
             x_new = random.uniform(x_1, x_2)
+
             fx_new = function(x_new)
 
-            acceptation_critter = make_acceptation_critter(fx, fx_new, temp)
+            acceptation_critter = make_acceptation_critter(fx, fx_new, temp, k)
 
-            if acceptation_critter > random.uniform(0,1):
+            if acceptation_critter == 1 or acceptation_critter > random.uniform(0,1):
                 x = x_new
+
 
         temp *= cooling_factor
     return x, function(x)

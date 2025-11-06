@@ -29,7 +29,7 @@ def plot_functions():
 
 
 def main():
-    plot_functions()
+    #plot_functions()
 
     print("Wybierz funkcję:")
     print("1 – Przyklad 3)")
@@ -37,9 +37,10 @@ def main():
     func_id = int(input("Podaj numer funkcji: "))
     M = int(input("Podaj liczbę iteracji M: "))
     T0 = float(input("Podaj temperaturę początkową T0: "))
-    k = float(input("Podaj współczynnik chłodzenia k (np. 0.95): "))
+    alpha = float(input("Podaj współczynnik chłodzenia alpha (np. 0.95): "))
+    k = float(input("Podaj współczynnik k: "))
 
-    x, fx = sa_algorithm(func_id, M, T0, k,2)
+    x, fx = sa_algorithm(func_id, M, T0, alpha,1, k)
     print(f"Maksimum globalne jest: {x: .3f} = {fx: .3f}")
 
 main()
