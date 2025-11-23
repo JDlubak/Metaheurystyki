@@ -63,11 +63,6 @@ def double_point_crossing(parent1, parent2):
     return result
 
 
-def sort_population(population):
-    population.sort(key=lambda x: (-x['Value'], -x['Generation']))
-    return population
-
-
 def mutate_individual(individual: dict, mutation_rate: float) -> None:
     if random.uniform(0, 1) < mutation_rate:
         mutation_index = random.randint(0, 25)
@@ -81,10 +76,9 @@ item_list = load_data()
 population = create_population(item_list, 100)
 
 # test sortowania
-population = sort_population(population)
+population.sort(key=lambda x: (-x['Value'], -x['Generation']))
 for item in population:
     print(item)
-
 
 # test krzyżowania
 print(f'Pierwszy osobnik: {population[0]['Name']}\nDrugi osobnik: {population[1]['Name']}')
