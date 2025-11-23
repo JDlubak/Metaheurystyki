@@ -15,7 +15,7 @@ This repository contains assignments from the course “Metaheuristics and their
 ## Zadania
 
 ### Wykonane zadania:
-- [ ] Zadanie 2 - symulowane wyżarzanie
+- [x] Zadanie 2 - symulowane wyżarzanie
 - [ ] Zadanie 3 - algorytm genetyczny
 - [ ] Zadanie 4 - algorytm mrówkowy
 - [ ] Zadanie 5 - rój cząstek

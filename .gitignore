@@ -9,5 +9,10 @@
 
 __pycache__
 *.txt
+*.zip
+*.csv
+*.xlsx
+*.pdf
+*.docx
 .idea
 .venv
