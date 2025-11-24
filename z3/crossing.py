@@ -15,14 +15,6 @@ def double_point_crossing(parent1: str, parent2: str, n: int) -> tuple[str, str]
     return first_child, second_child
 
 
-def mutate_individual(individual: dict, mutation_probability: float) -> None:
-    if random.uniform(0, 1) < mutation_probability:
-        mutation_index = random.randint(0, len(individual['Name']) - 1)
-        name = list(individual['Name'])
-        name[mutation_index] = '0' if name[mutation_index] == '1' else '1'
-        individual['Name'] = ''.join(name)
-
-
 def cross_algorithm(parent1: str, parent2: str,
                     crossing_probability: float, crossing_method: str) -> tuple[str, str]:
     if crossing_method not in ('single', 'double'):

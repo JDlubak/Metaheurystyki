@@ -21,12 +21,10 @@ def set_adaptation_in_population(selection_type: str, population: list[dict]) ->
     return population
 
 
-def selection_algorithm(population: list[dict], amount_of_selected: int, selection_type: str) -> list[dict]:
-    if len(population) == 0:
+def selection_algorithm(population: list[dict], selection_type: str) -> list[dict]:
+    population_size = len(population)
+    if population_size == 0:
         raise ValueError('Proszę utworzyć populację!')
-    if amount_of_selected > len(population):
-        raise ValueError(f'Proszę wybrać mniej osobników w metodzie ruletki - wybrana liczba '
-                         f'{amount_of_selected} przekracza rozmiar populacji {len(population)}!')
     population = set_adaptation_in_population(selection_type, population)
     selected = []
     adaptation_sum = 0
@@ -34,7 +32,7 @@ def selection_algorithm(population: list[dict], amount_of_selected: int, selecti
     for individual in population:
         adaptation_sum += individual['Adaptation']
         cumulative_adaptation.append(adaptation_sum)
-    for _ in range(amount_of_selected):
+    for _ in range(population_size):
         r = random.uniform(0, 1)
         for index, limit in enumerate(cumulative_adaptation):
             if r <= limit:

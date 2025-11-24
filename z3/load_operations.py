@@ -14,7 +14,8 @@ def load_data() -> dict:
     return items
 
 
-def load_config() -> tuple[float, float, int, int, str, str]:
+def load_config() -> tuple[float, float, int, int, str, str, int]:
     config = json.load(open('config.json'))
     return (config['crossing_probability'], config['mutation_probability'], config['population size'],
-            config['iterations'], config['crossing_method'], config['selection_method'])
+            config['iterations'], config['crossing_method'], config['selection_method'],
+            config['mutated_bits'])
