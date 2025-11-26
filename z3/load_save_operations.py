@@ -50,7 +50,7 @@ def data_to_csv(best: list[dict], worst: list[dict], worst_with_zero: list[dict]
         return
     try:
         file_name_start = (f'results-{crossing_method}-{selection_method}-{iterations}-'
-                           f'{population_size}-{crossing_probability}-{mutation_probability}.csv')
+                           f'{population_size}-{crossing_probability}-{mutation_probability}')
         os.mkdir('results') if not os.path.exists('results/') else None
         file_count = sum(1 for file in os.listdir('results') if os.path.isfile(file)
                          and file.startswith(file_name_start)
