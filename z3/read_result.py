@@ -1,6 +1,7 @@
 import pandas as pd
 from load_save_operations import load_data
 
+
 def extract_data_from_file_name(file_name: str) -> dict:
     file_data = pd.read_csv(f'results/{file_name}')
     file_name = file_name.replace('.csv', '').replace('results-', '')
@@ -19,8 +20,13 @@ def extract_data_from_file_name(file_name: str) -> dict:
         'time': file_data.iloc[0, -1]
     }
 
+
 def get_best_backpack(data: pd.DataFrame) -> str:
     return data.loc[data['Best_Value'].idxmax(), 'Best_Name']
+
+
+def get_worst_backpack(data: pd.DataFrame) -> str:
+    return data.loc[data['Worst_Value'].idxmin(), 'Worst_Name']
 
 
 def get_items_from_backpack(backpack: str) -> list:
@@ -35,7 +41,8 @@ def get_items_from_backpack(backpack: str) -> list:
 
 data = extract_data_from_file_name('results-double-ranking-200-300-0.81-0.1-1.csv')
 best_backpack = get_best_backpack(data['data'])
+worst_backpack = get_worst_backpack(data['data'])
 print(best_backpack)
+print(worst_backpack)
 print(get_items_from_backpack(best_backpack))
-
-
+print(get_items_from_backpack(worst_backpack))

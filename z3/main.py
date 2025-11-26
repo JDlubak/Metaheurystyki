@@ -13,8 +13,6 @@ start_time = time.time()
 population = create_population(item_list, population_size)
 best, worst, worst_with_zero, avg = [], [], [], []
 save_iteration_data(population, best, worst, worst_with_zero, avg)
-for item in population:
-    print(item)
 
 for _ in range(iterations):
     selection = selection_algorithm(population, selection_method)
