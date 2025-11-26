@@ -5,13 +5,13 @@ from selection import selection_algorithm
 from load_save_operations import load_data, load_config, save_iteration_data, data_to_csv
 
 item_list = load_data()
+best, worst, worst_with_zero, avg = [], [], [], []
 (crossing_probability, mutation_probability, population_size,
  iterations, crossing_method, selection_method) = load_config()
 
 start_time = time.time()
 
 population = create_population(item_list, population_size)
-best, worst, worst_with_zero, avg = [], [], [], []
 save_iteration_data(population, best, worst, worst_with_zero, avg)
 
 for _ in range(iterations):

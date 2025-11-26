@@ -12,10 +12,6 @@ def set_adaptation_in_population(selection_type: str, population: list[dict]) ->
         n = len(population)
         for rank, ind in enumerate(population, start=1):
             ind['Adaptation'] = (n - rank + 1) / (n * (n + 1) / 2)
-            # (n * (n + 1) / 2) - wzór na sumę liczb od 1 do n
-            # (n - rank + 1) - dla 1 będzie n, dla 2 n-1... dla ostatniego 1 - zgodnie z prezką
-            # po podzieleniu mamy adaptację
-            # do opisania w sprawku i potem usuniemy ten komentarz
     else:
         raise ValueError(f'Błędny typ selekcji: {selection_type}. Użyj "roulette"/"ranking"')
     return population
