@@ -15,16 +15,13 @@ def double_point_crossing(parent1: str, parent2: str, n: int) -> tuple[str, str]
     return first_child, second_child
 
 
-def cross_algorithm(parent1: str, parent2: str,
-                    crossing_probability: float, crossing_method: str) -> tuple[str, str]:
+def cross_algorithm(parent1: str, parent2: str, crossing_method: str) -> tuple[str, str]:
     if crossing_method not in ('single', 'double'):
         raise ValueError(f'Błędna metoda krzyżowania: {crossing_method}. Użyj "single"/"double"')
     n1, n2 = len(parent1), len(parent2)
     if n1 != n2:
         raise ValueError(f'Nieoczekiwany błąd: Rodzice mają różną długość! ({n1}, {n2})')
-    if random.uniform(0, 1) > crossing_probability:
-        return parent1, parent2
-    elif crossing_method == 'single':
+    if crossing_method == 'single':
         return single_point_crossing(parent1, parent2, n1)
     elif crossing_method == 'double':
         return double_point_crossing(parent1, parent2, n1)

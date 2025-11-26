@@ -6,17 +6,20 @@ from load_save_operations import load_data, load_config, save_iteration_data, da
 
 item_list = load_data()
 (crossing_probability, mutation_probability, population_size,
- iterations, crossing_method, selection_method, mutated_bits) = load_config()
+ iterations, crossing_method, selection_method) = load_config()
 
 start_time = time.time()
 
 population = create_population(item_list, population_size)
 best, worst, worst_with_zero, avg = [], [], [], []
+save_iteration_data(population, best, worst, worst_with_zero, avg)
+for item in population:
+    print(item)
 
 for _ in range(iterations):
     selection = selection_algorithm(population, selection_method)
     next_generation = cross_population(selection, crossing_method, crossing_probability, item_list)
-    mutate_population(next_generation, mutation_probability, item_list, mutated_bits)
+    mutate_population(next_generation, mutation_probability, item_list)
     population = next_generation
     save_iteration_data(population, best, worst, worst_with_zero, avg)
 
