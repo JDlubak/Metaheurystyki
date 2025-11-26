@@ -17,10 +17,29 @@ def load_data() -> dict:
 
 
 def load_config() -> tuple[float, float, int, int, str, str]:
-    config = json.load(open('config.json'))
-    return (config['crossing_probability'], config['mutation_probability'],
-            config['population size'], config['iterations'],
-            config['crossing_method'], config['selection_method'])
+    try:
+        config = json.load(open('config.json'))
+        cp = config['crossing_probability']
+        mp = config['mutation_probability']
+        p = config['population size']
+        i = config['iterations']
+        cm = config['crossing_method']
+        sm = config['selection_method']
+        if not (isinstance(cp, (int, float)) and 0 <= cp <= 1):
+            raise ValueError("crossing_probability musi być liczbą z zakresu 0–1.")
+        if not (isinstance(mp, (int, float)) and 0 <= mp <= 1):
+            raise ValueError("mutation_probability musi być liczbą z zakresu 0–1.")
+        if not (isinstance(p, int) and p > 0):
+            raise ValueError("population size musi być dodatnią liczbą całkowitą.")
+        if not (isinstance(i, int) and i > 0):
+            raise ValueError("iterations musi być dodatnią liczbą całkowitą.")
+        if cm not in ("single", "double"):
+            raise ValueError("crossing_method musi być 'single' lub 'double'.")
+        if sm not in ("roulette", "ranking"):
+            raise ValueError("selection_method musi być 'roulette' lub 'ranking'.")
+    except Exception as e:
+        raise ValueError(f'Błąd przy wczytywaniu config.json: {e}')
+    return cp, mp, p, i, cm, sm
 
 
 def save_iteration_data(pop: list[dict], best: list[dict], worst: list[dict],
@@ -42,12 +61,8 @@ def save_iteration_data(pop: list[dict], best: list[dict], worst: list[dict],
 
 def data_to_csv(best: list[dict], worst: list[dict], worst_with_zero: list[dict], avg: list[float],
                 total_time: float) -> None:
-    try:
-        (crossing_probability, mutation_probability, population_size,
-         iterations, crossing_method, selection_method) = load_config()
-    except Exception as e:
-        print(f'Wystąpił błąd: {e}')
-        return
+    (crossing_probability, mutation_probability, population_size,
+     iterations, crossing_method, selection_method) = load_config()
     try:
         file_name_start = (f'results-{crossing_method}-{selection_method}-{iterations}-'
                            f'{population_size}-{crossing_probability}-{mutation_probability}')

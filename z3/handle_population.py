@@ -16,11 +16,9 @@ def create_population(items: dict, size: int) -> list[dict]:
 def create_individual() -> str:
     selected = random.randint(0, 67_108_863)
     return format(selected, '026b')
-    # Napis typu 10100101101111011110101000 - liczba 26-bitowa.
-    # Interpretacja -> wkładamy do plecaka 1 element, 3, 6, 8, 9 itd.
 
 
-def calculate_value(items: dict, individual: dict) -> int:
+def calculate_value(items: dict, individual: str) -> int:
     BACKPACK_LIMIT = 6_406_180
     total_weight = 0
     total_value = 0
