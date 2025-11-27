@@ -5,13 +5,11 @@ from load_save_operations import load_data
 def extract_data_from_file_name(file_name: str) -> dict:
     file_data = pd.read_csv(f'results/{file_name}')
     file_name = file_name.replace('.csv', '').replace('results-', '')
-    print(file_name)
     name_parts = file_name.split('-')
     name_parts.pop()
-    print(name_parts)
     return {
-        'cross': name_parts[0],
-        'sel': name_parts[1],
+        'cross': "k. jednopunktowe" if name_parts[0] == "single" else "k. dwupunktowe",
+        'sel': "m. ruletkowa" if name_parts[1] == "roulette" else "m. rankingowa",
         'iter': name_parts[2],
         'pop': name_parts[3],
         'cp': name_parts[4],
@@ -37,12 +35,3 @@ def get_items_from_backpack(backpack: str) -> list:
         if item == '1':
             backpack_list.append(item_list[i]['Name'])
     return backpack_list
-
-
-data = extract_data_from_file_name('results-double-ranking-200-300-0.81-0.1-1.csv')
-best_backpack = get_best_backpack(data['data'])
-worst_backpack = get_worst_backpack(data['data'])
-print(best_backpack)
-print(worst_backpack)
-print(get_items_from_backpack(best_backpack))
-print(get_items_from_backpack(worst_backpack))
