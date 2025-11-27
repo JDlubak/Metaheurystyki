@@ -30,8 +30,12 @@ for config_name in configurations:
 
     matching = df[df.apply(lambda row: getName(row) == config_name, axis=1)]
 
-    all_avgs_list = [row['avg'].rename(row['filename']) for _, row in matching.iterrows()]
-    all_best_list = [row['best'].rename(row['filename']) for _, row in matching.iterrows()]
+    all_avgs_list = []
+    all_best_list = []
+
+    for i, (_, row) in enumerate(matching.iterrows(), start=1):
+        all_avgs_list.append(row['avg'].rename(f"Uruchomienie {i}"))
+        all_best_list.append(row['best'].rename(f"Uruchomienie {i}"))
 
     # --- AVG ---
     if all_avgs_list:
@@ -64,6 +68,34 @@ for config_name in configurations:
 
         plt.plot(mean_best, linewidth=3, color='black', label='Średnia')
         plt.title(f"BEST – {config_name}")
+        plt.xlabel('Iteracja')
+        plt.ylabel('Wartość PLN')
+        plt.grid(True)
+        plt.legend()
+        plt.tight_layout()
+        plt.show()
+
+    # --- PORÓWNANIE AVG ---
+    if comparison_avg:
+        plt.figure(figsize=(14, 6))
+        for name, series in comparison_avg.items():
+            plt.plot(series, linewidth=2, label=name)
+
+        plt.title('PORÓWNANIE: Średnich rozwiązań')
+        plt.xlabel('Iteracja')
+        plt.ylabel('Wartość PLN')
+        plt.grid(True)
+        plt.legend()
+        plt.tight_layout()
+        plt.show()
+
+    # --- PORÓWNANIE BEST ---
+    if comparison_best:
+        plt.figure(figsize=(14, 6))
+        for name, series in comparison_best.items():
+            plt.plot(series, linewidth=2, label=name)
+
+        plt.title('PORÓWNANIE: Średnich najlepszych rozwiązań')
         plt.xlabel('Iteracja')
         plt.ylabel('Wartość PLN')
         plt.grid(True)
