@@ -16,6 +16,7 @@ def extract_data_from_file_name(file_name: str) -> dict:
         'mp': name_parts[5],
         'avg': file_data["Avg"],
         'best': file_data["Best_Value"],
+        'worst': file_data["Worst_Value_With_Zero"],
         'time': file_data.iloc[0, -1],
         'filename': file_name + ".csv"
     }
