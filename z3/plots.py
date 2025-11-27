@@ -1,116 +1,72 @@
 import matplotlib.pyplot as plt
 import pandas as pd
+import os
+from read_result import extract_data_from_file_name
 
 result_folder = "results/"
 
-configurations = [
-    f'{result_folder}results-single-ranking-500-200-0.8-0.05-',
-    f'{result_folder}results-single-roulette-500-200-0.8-0.05-',
-    f'{result_folder}results-double-ranking-500-200-0.8-0.05-',
-    f'{result_folder}results-double-roulette-500-200-0.8-0.05-'
-]
+data_list = []
 
-def getName(name):
-    if "ranking" in name:
-        base = "Ranking"
-    else:
-        base = "Ruletka"
+for file in os.listdir(result_folder):
+    if not file.endswith(".csv"):
+        continue
 
-    if "single" in name:
-        return base + "-single"
-    else:
-        return base + "-double"
+    data = extract_data_from_file_name(file)
+    data["filename"] = file
+    data_list.append(data)
+
+df = pd.DataFrame(data_list)
+
+def getName(data):
+    return f"{data['sel']}, {data['cross']}"
+
+configurations = df.groupby(["sel", "cross"]).apply(lambda x: getName(x.iloc[0]))
+configurations = configurations.unique()
 
 comparison_avg = {}
 comparison_best = {}
 
 for config_name in configurations:
-    # --- AVG ---
-    all_avgs_list = []
-    for i in range(1, 6):
-        filename = f"{config_name}{i}.csv"
-        try:
-            df = pd.read_csv(filename)
-            all_avgs_list.append(df['Avg'].rename(f'Uruchomienie{i}'))
-        except FileNotFoundError:
-            print(f"Brak pliku: {filename}")
 
+    matching = df[df.apply(lambda row: getName(row) == config_name, axis=1)]
+
+    all_avgs_list = [row['avg'].rename(row['filename']) for _, row in matching.iterrows()]
+    all_best_list = [row['best'].rename(row['filename']) for _, row in matching.iterrows()]
+
+    # --- AVG ---
     if all_avgs_list:
         all_avgs = pd.concat(all_avgs_list, axis=1)
-        mean_avg_series = all_avgs.mean(axis=1)
-        comparison_avg[config_name] = mean_avg_series
+        mean_avg = all_avgs.mean(axis=1)
+        comparison_avg[config_name] = mean_avg
 
         plt.figure(figsize=(14, 6))
         for col in all_avgs.columns:
-            plt.plot(all_avgs.index, all_avgs[col], '--', linewidth=1, label=col)
+            plt.plot(all_avgs[col], '--', linewidth=1, label=col)
 
-        plt.plot(mean_avg_series.index, mean_avg_series, linewidth=3, color='black', label='Średnia')
-
-        plt.title(getName(config_name))
+        plt.plot(mean_avg, linewidth=3, color='black', label='Średnia')
+        plt.title(f"AVG – {config_name}")
         plt.xlabel('Iteracja')
-        plt.ylabel('Wartosc w PLN')
-        plt.xticks(range(0, 500, 50))
-        plt.legend()
+        plt.ylabel('Wartość PLN')
         plt.grid(True)
+        plt.legend()
         plt.tight_layout()
         plt.show()
 
     # --- BEST ---
-    all_best_list = []
-    for i in range(1,6):
-        filename = f"{config_name}{i}.csv"
-        try:
-            df = pd.read_csv(filename)
-            all_best_list.append(df['Best_Value'].rename(f'Uruchomienie{i}'))
-        except FileNotFoundError:
-            print(f"Brak pliku: {filename}")
-
     if all_best_list:
         all_best = pd.concat(all_best_list, axis=1)
-        mean_best_series = all_best.mean(axis=1)
-        comparison_best[config_name] = mean_best_series
+        mean_best = all_best.mean(axis=1)
+        comparison_best[config_name] = mean_best
 
         plt.figure(figsize=(14, 6))
         for col in all_best.columns:
-            plt.plot(all_best.index, all_best[col], '--', linewidth=1, label=col)
+            plt.plot(all_best[col], '--', linewidth=1, label=col)
 
-        plt.plot(mean_best_series.index, mean_best_series, linewidth=3, color='black', label='Średnia')
-
-        plt.title(getName(config_name))
+        plt.plot(mean_best, linewidth=3, color='black', label='Średnia')
+        plt.title(f"BEST – {config_name}")
         plt.xlabel('Iteracja')
-        plt.ylabel('Wartosc w PLN')
-        plt.xticks(range(0, 500, 50))
-        plt.legend()
+        plt.ylabel('Wartość PLN')
         plt.grid(True)
+        plt.legend()
         plt.tight_layout()
         plt.show()
-
-# --- COMPARISON AVG ---
-if comparison_avg:
-    plt.figure(figsize=(14, 6))
-    for name, series in comparison_avg.items():
-        plt.plot(series.index, series, linewidth=2, label=getName(name))
-
-    plt.title('PORÓWNANIE: Średnich rozwiązań')
-    plt.xlabel('Iteracja')
-    plt.ylabel('Wartosc w PLN')
-    plt.xticks(range(0, 500, 50))
-    plt.legend()
-    plt.grid(True)
-    plt.tight_layout()
-    plt.show()
-
-# --- COMPARISON BEST ---
-if comparison_best:
-    plt.figure(figsize=(14, 6))
-    for name, series in comparison_best.items():
-        plt.plot(series.index, series, linewidth=2, label=getName(name))
-
-    plt.title('PORÓWNANIE: Średnie najlepsze rozwiązania')
-    plt.xlabel('Iteracja')
-    plt.ylabel('Wartosc w PLN')
-    plt.xticks(range(0, 500, 50))
-    plt.legend()
-    plt.grid(True)
-    plt.tight_layout()
-    plt.show()
