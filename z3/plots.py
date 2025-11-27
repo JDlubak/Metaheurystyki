@@ -81,7 +81,28 @@ def draw_plots(iter_val, pop_val, cp_val, mp_val):
             plt.tight_layout()
             plt.show()
 
-    # --- PORÓWNANIE AVG ---
+
+
+
+def draw_comparison_plot(filter_column, value_list):
+    comparison_avg = {}
+    comparison_best = {}
+    for val in value_list:
+        filtered_df = df[df[filter_column] == val]
+
+        all_avgs_list = [row['avg'].rename(f"{filter_column}={val} Uruchomienie {i + 1}")
+                         for i, (_, row) in enumerate(filtered_df.iterrows())]
+        all_best_list = [row['best'].rename(f"{filter_column}={val} Uruchomienie {i + 1}")
+                         for i, (_, row) in enumerate(filtered_df.iterrows())]
+
+        if all_avgs_list:
+            all_avgs = pd.concat(all_avgs_list, axis=1)
+            comparison_avg[val] = all_avgs.mean(axis=1)
+
+        if all_best_list:
+            all_best = pd.concat(all_best_list, axis=1)
+            comparison_best[val] = all_best.mean(axis=1)
+
     if comparison_avg:
         plt.figure(figsize=(14, 6))
         for name, series in comparison_avg.items():
@@ -94,7 +115,6 @@ def draw_plots(iter_val, pop_val, cp_val, mp_val):
         plt.tight_layout()
         plt.show()
 
-    # --- PORÓWNANIE BEST ---
     if comparison_best:
         plt.figure(figsize=(14, 6))
         for name, series in comparison_best.items():
@@ -107,4 +127,7 @@ def draw_plots(iter_val, pop_val, cp_val, mp_val):
         plt.tight_layout()
         plt.show()
 
+
 draw_plots(500, 200, 0.8, 0.1)
+
+draw_comparison_plot('cp', ['0.6', '0.8', '1.0'])
