@@ -45,9 +45,4 @@ class Ant:
                 self.path.append(next_attraction)
 
 
-def create_colony(size, n, p_random, alpha, beta):
-    colony = []
-    for _ in range(size):
-        ant = Ant(n, p_random, alpha, beta)
-        colony.append(ant)
-    return colony
+
