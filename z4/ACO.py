@@ -1,10 +1,16 @@
 import random
 import time
-
+import numpy as np
 from ant import Ant
-from file import read_file, save_iteration_data, save_run
-from maths import create_matrices
+from file import save_iteration_data, save_run
 from plot import draw_route
+
+
+def create_distance_matrix(data):
+    coords = data[["x", "y"]].to_numpy()
+    diff = coords[:, None, :] - coords[None, :, :]
+    distance_matrix = np.sqrt((diff ** 2).sum(axis=2))
+    return distance_matrix
 
 
 def create_colony(size, n, p_random, alpha, beta):
@@ -27,24 +33,21 @@ def run_iteration(colony, distance_matrix, pheromone_matrix, rho):
             pheromone_matrix[next_goal, start] += 1 / distance
 
 
-def run_algorithm(file, p_random, alpha, beta,
+def run_algorithm(file, distance_matrix, df, p_random, alpha, beta,
                   iterations, rho, col_size, plot=None):
     best = []
     worst = []
     avg = []
+    n = len(df)
+    pheromone_matrix = np.ones((n, n), dtype=float)
+    colony = create_colony(col_size, n, p_random, alpha, beta)
     start_time = time.time()
-    df = read_file(file)
-
-    distance_matrix, pheromone_matrix = create_matrices(df)
-
-    colony = create_colony(col_size, len(df), p_random, alpha, beta)
-    shortest = None
+    shortest = float("inf")
     best_path = random.choice(colony)
     for i in range(iterations):
         run_iteration(colony, distance_matrix, pheromone_matrix, rho)
         for ant in colony:
-            if shortest is None \
-                    or ant.distance < shortest:
+            if ant.distance < shortest:
                 best_path = ant.path
                 shortest = ant.distance
         save_iteration_data(colony, best, worst, avg)
