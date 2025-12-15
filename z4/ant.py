@@ -10,6 +10,9 @@ class Ant:
         self.p_random = p_random
         self.alpha = alpha
         self.beta = beta
+        self.distance = None
+        self.shortest = None
+        self.best_path = None
 
     def calculate_distance(self, dm):
         total_distance = 0
@@ -17,7 +20,10 @@ class Ant:
         for attraction in self.path[1:]:
             total_distance += dm.at[prev_attraction, attraction]
             prev_attraction = attraction
-        return total_distance
+        self.distance = total_distance
+        if self.shortest is None or self.distance < self.shortest:
+            self.best_path = self.path.copy()
+            self.shortest = total_distance
 
     def create_path(self, dm, pm):
         start = random.randint(1, self.count)

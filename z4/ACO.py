@@ -14,7 +14,8 @@ def run_iteration(colony, distance_matrix, pheromone_matrix, rho):
         ant.create_path(distance_matrix, pheromone_matrix)
     pheromone_matrix.iloc[:, :] *= (1 - rho)
     for ant in colony:
-        distance = ant.calculate_distance(distance_matrix)
+        ant.calculate_distance(distance_matrix)
+        distance = ant.distance
         start = ant.path[0]
         for next_goal in ant.path[1:]:
             pheromone_matrix.at[start, next_goal] += 1 / distance
