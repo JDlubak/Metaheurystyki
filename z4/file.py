@@ -63,21 +63,17 @@ def save_iteration_data(colony, best, worst, avg):
     avg.append(float(sum(all_distances) / len(all_distances)))
 
 
-def save_run(best, worst, avg, time_elapsed, best_path, shortest):
-    (file, p_random, alpha, beta,
-     iterations, rho, col_size) = load_config()
-    count = file[3:5]
-    file_name_start = (f'results-{count}-{p_random}-{alpha}-{beta}-'
-                       f'{iterations}-{rho}-{col_size}')
+def save_run(best, worst, avg, time_elapsed,
+             best_path, shortest, file_name_start):
     try:
         os.mkdir('results') if not os.path.exists('results/') else None
         file_count = sum(1 for file in os.listdir('results') if
-                     os.path.isfile(f'results/{file}')
-                     and file.startswith(file_name_start)
-                     and file.endswith('.csv'))
+                         os.path.isfile(f'results/{file}')
+                         and file.startswith(file_name_start)
+                         and file.endswith('.csv'))
         file_name = f'results/{file_name_start}-{file_count + 1}.csv'
     except Exception as e:
-        print(f'Wystąpił błąd: {e}')
+        print(f'An error occured: {e}')
         return
     try:
         df = pd.DataFrame(

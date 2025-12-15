@@ -41,7 +41,6 @@ def run_algorithm(file, p_random, alpha, beta,
     shortest = None
     best_path = random.choice(colony)
     for i in range(iterations):
-        print(f'Iteration: {i + 1}')
         run_iteration(colony, distance_matrix, pheromone_matrix, rho)
         for ant in colony:
             if shortest is None \
@@ -52,5 +51,11 @@ def run_algorithm(file, p_random, alpha, beta,
 
     end_time = time.time()
     time_elapsed = end_time - start_time
-
-    save_run(best, worst, avg, time_elapsed, best_path, shortest)
+    if plot:
+        draw_route(df, best_path)
+    else:
+        count = file[3:5]
+        file_name_start = (f'results-{count}-{p_random}-{alpha}-{beta}-'
+                           f'{iterations}-{rho}-{col_size}')
+        save_run(best, worst, avg, time_elapsed,
+                 best_path, shortest, file_name_start)

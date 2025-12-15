@@ -2,19 +2,17 @@ from file import load_config
 from ACO import run_algorithm
 from itertools import product
 
-plot = input("Do you want to run algorithm using values from config "
-             "file and plot the result path afterwards?\n"
-             "If so, provide any input, otherwise press enter.\n"
-             "If you press enter, algorithm will start 5 times for "
-             "every single one of possible 3072 combinations, and\n"
-             "results from these 15360 experiments would be saved to "
-             "files.")
-if plot:
+print("Select how algorithm should be run:")
+print("1 - Use values from config and draw plot")
+print("2 - Run experiments for various values and save them to files")
+
+choice = input("Twój wybór (1/2): ").strip()
+if choice == "1":
     (file, p_random, alpha, beta,
      iterations, rho, col_size) = (load_config())
     run_algorithm(file, p_random, alpha, beta,
-                  iterations, rho, col_size, plot)
-else:
+                  iterations, rho, col_size, plot=True)
+elif choice == "2":
     files = ["A-n32-k5.txt", "A-n80-k10.txt"]
     p_randoms = [0, 0.01, 0.05, 0.1]
     alphas = [0.5, 1, 2, 5]
@@ -25,5 +23,8 @@ else:
     for file, p_random, alpha, beta, iteration, rho, col_size in (
             product(files, p_randoms, alphas, betas,
                     iterations, rhos, col_sizes)):
-        run_algorithm(file, p_random, alpha, beta,
-                      iteration, rho, col_size)
+        for _ in range(5):
+            run_algorithm(file, p_random, alpha, beta,
+                          iteration, rho, col_size)
+else:
+    print("Wrong.")
