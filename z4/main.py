@@ -1,25 +1,29 @@
-import random
+from file import load_config
+from ACO import run_algorithm
+from itertools import product
 
-from ACO import create_colony, run_iteration
-from maths import create_matrices
-from file import read_file
-from plot import draw_route
-
-df = read_file('A-n32-k5.txt')
-distance_matrix, pheromone_matrix = create_matrices(df)
-p_random = 0.01
-alpha = 20
-beta = 10
-iterations = 10
-rho = 0.5
-
-colony = create_colony(600, len(df), p_random, alpha, beta)
-best_ant = random.choice(colony)
-for i in range(iterations):
-    print(f'Iteration: {i + 1}')
-    run_iteration(colony, distance_matrix, pheromone_matrix, rho)
-    for ant in colony:
-        if ant.shortest < best_ant.shortest:
-            best_ant = ant
-            
-draw_route(df, best_ant.best_path)
+plot = input("Do you want to run algorithm using values from config "
+             "file and plot the result path afterwards?\n"
+             "If so, provide any input, otherwise press enter.\n"
+             "If you press enter, algorithm will start 5 times for "
+             "every single one of possible 3072 combinations, and\n"
+             "results from these 15360 experiments would be saved to "
+             "files.")
+if plot:
+    (file, p_random, alpha, beta,
+     iterations, rho, col_size) = (load_config())
+    run_algorithm(file, p_random, alpha, beta,
+                  iterations, rho, col_size, plot)
+else:
+    files = ["A-n32-k5.txt", "A-n80-k10.txt"]
+    p_randoms = [0, 0.01, 0.05, 0.1]
+    alphas = [0.5, 1, 2, 5]
+    betas = [1, 2, 5, 10]
+    iterations = [100, 500, 1000]
+    rhos = [0.1, 0.3, 0.5, 0.8]
+    col_sizes = [10, 20, 50, 100]
+    for file, p_random, alpha, beta, iteration, rho, col_size in (
+            product(files, p_randoms, alphas, betas,
+                    iterations, rhos, col_sizes)):
+        run_algorithm(file, p_random, alpha, beta,
+                      iteration, rho, col_size)

@@ -12,7 +12,7 @@ def create_matrices(data):
 
 def get_probabilities(pm, dm, loc, unvisited, alpha, beta):
     epsilon = 1e-10
-    u = np.array(list(unvisited))  # zamieniamy set na ndarray
+    u = np.array(list(unvisited))
     values = ((pm[loc, u] ** alpha) *
               ((1 / (dm[loc, u] + epsilon)) ** beta))
     probs = values / values.sum()
