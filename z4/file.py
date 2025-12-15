@@ -7,4 +7,5 @@ def read_file(filename):
                        header=None,
                        names=["index", "x", "y"])
     data.set_index('index', inplace=True)
+    data.index = data.index - 1
     return data
