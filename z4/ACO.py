@@ -2,7 +2,7 @@ import random
 import time
 import numpy as np
 from ant import Ant
-from file import save_iteration_data, save_run
+from file import save_run
 from plot import draw_route
 
 
@@ -45,17 +45,20 @@ def run_algorithm(file, distance_matrix, df, p_random, alpha, beta,
     shortest = float("inf")
     best_path = random.choice(colony)
     for i in range(iterations):
+        all_distances = []
         run_iteration(colony, distance_matrix, pheromone_matrix, rho)
         for ant in colony:
+            all_distances.append(ant.distance)
             if ant.distance < shortest:
-                best_path = ant.path
+                best_path = ant.path.copy()
                 shortest = ant.distance
-        save_iteration_data(colony, best, worst, avg)
-
+        best.append(float(min(all_distances)))
+        worst.append(float(max(all_distances)))
+        avg.append(float(sum(all_distances) / len(all_distances)))
     end_time = time.time()
     time_elapsed = end_time - start_time
     if plot:
-        draw_route(df, best_path)
+        draw_route(df, best_path, shortest)
     else:
         count = file[3:5]
         file_name_start = (f'results-{count}-{p_random}-{alpha}-{beta}-'

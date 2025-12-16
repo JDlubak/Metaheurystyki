@@ -54,15 +54,6 @@ def load_config():
     return file, p_random, alpha, beta, iterations, rho, col_size
 
 
-def save_iteration_data(colony, best, worst, avg):
-    all_distances = []
-    for ant in colony:
-        all_distances.append(ant.distance)
-    best.append(float(min(all_distances)))
-    worst.append(float(max(all_distances)))
-    avg.append(float(sum(all_distances) / len(all_distances)))
-
-
 def save_run(best, worst, avg, time_elapsed,
              best_path, shortest, file_name_start):
     try:

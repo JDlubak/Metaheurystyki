@@ -1,8 +1,7 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
-
-def draw_route(df, order):
+def draw_route(df, order, shortest):
     x = df.iloc[order]["x"].values
     y = df.iloc[order]["y"].values
 
@@ -25,4 +24,5 @@ def draw_route(df, order):
     for i, (xi, yi) in enumerate(zip(x3, y3)):
         plt.text(xi, yi, str(i), fontsize=12)
     plt.show()
+    print(shortest)
 
