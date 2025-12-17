@@ -50,7 +50,7 @@ def extract_data_from_file_name(file_name: str) -> dict:
     name_parts = file_name.split('-')
     name_parts.pop()
     return {
-        'count': name_parts[0],
+        'count_': name_parts[0],
         'p_random': name_parts[1],
         'alpha': name_parts[2],
         'beta': name_parts[3],
@@ -95,7 +95,7 @@ def draw_comparison_plot(filter_column, value_list, df, df_number):
         'col_size': 'rozmiaru kolonii',
     }
     problem_size = len(df_number)
-    main_df = df[df['count'] == str(problem_size)]
+    main_df = df[df['count_'] == str(problem_size)]
     main_df = main_df[main_df['beta'].isin(['10'])]
 
     comparison_avg = {}
@@ -204,7 +204,7 @@ def draw_time_plot(filter_column, value_list, df, df_number, ax):
     }
     df['time'] = pd.to_numeric(df['time'], errors='coerce')
     problem_size = len(df_number)
-    main_df = df[df['count'] == str(problem_size)]
+    main_df = df[df['count_'] == str(problem_size)]
     main_df = main_df[main_df['beta'].isin(['1', '3', '6'])]
     mean_times = []
     for val in value_list:
@@ -260,12 +260,47 @@ for d_f in [df32, df80]:
 draw_comparison_plot('alpha', ['0.5'], df, df80)
 
 
+def compute_stats_max(df_input, param_cols, best_col='best'):
+    def max_of_series(series_obj):
+        try:
+            return float(series_obj.min())
+        except Exception:
+            return pd.NA
+
+    df_input['best_max'] = df_input[best_col].apply(max_of_series)
+    df_input['best_max'] = pd.to_numeric(df_input['best_max'],
+                                         errors='coerce')
+
+    stats = (
+        df_input.groupby(param_cols)['best_max']
+        .agg(['mean', 'median', 'min', 'max', 'std'])
+        .reset_index()
+    )
+
+    stats.columns = [
+        '_'.join(col).strip('_') if isinstance(col, tuple) else col for
+        col in stats.columns]
+    stats = stats.rename(columns={'min': 'shortest_route',
+                                  'mean': 'avg_route',
+                                  'max': 'longest_route'})
+    numeric_cols = stats.select_dtypes(include='number').columns
+    stats[numeric_cols] = stats[numeric_cols].round(3)
+    return stats
 
 
+df_32 = df[df['beta'].isin(['1', '3', '6'])].copy()
+df_32 = df_32[df_32['count_'] == '32']
+df_80 = df[df['beta'].isin(['1', '3', '6'])].copy()
+df_80 = df_80[df_80['count_'] == '80']
 
 
+param_cols = ['p_random', 'alpha', 'beta', 'iterations', 'rho', 'col_size']
 
+stats_32 = compute_stats_max(df_32, param_cols)
 
+stats_80 = compute_stats_max(df_80, param_cols)
 
-
+os.makedirs('stats', exist_ok=True)
+stats_32.to_csv('stats/stats_32.csv', index=False)
+stats_80.to_csv('stats/stats_80.csv', index=False)
 
