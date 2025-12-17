@@ -17,15 +17,15 @@ def run_single(params):
 
 if __name__ == "__main__":
     files = ["A-n32-k5.txt", "A-n80-k10.txt"]
-    p_randoms = [0.01, 0.05, 0.1]
+    p_randoms = [0]
     alphas = [0.5, 2, 5]
-    betas = [1, 3, 6]
-    iterations = [100, 300, 600]
-    rhos = [0.1, 0.3, 0.7]
-    col_sizes = [15, 40, 80]
+    betas = [5, 6, 8]
+    iterations = [100]
+    rhos = [0.1, 0.3]
+    col_sizes = [60, 100]
 
     tasks = []
-    task_id = 1
+    task_id = 2500
 
     for file in files:
         df = read_file(file)
@@ -34,7 +34,7 @@ if __name__ == "__main__":
             p_random, alpha, beta, iteration, rho, col_size = combination
             for _ in range(5):
                 tasks.append((
-                    task_id, 
+                    task_id,
                     file, dm, df,
                     p_random, alpha, beta,
                     iteration, rho, col_size

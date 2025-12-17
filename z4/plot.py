@@ -1,6 +1,7 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
+
 def draw_route(df, order, shortest):
     x = df.iloc[order]["x"].values
     y = df.iloc[order]["y"].values

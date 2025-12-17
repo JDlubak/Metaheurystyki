@@ -40,7 +40,12 @@ class Ant:
     def get_probabilities(self, pm, dm, loc, unvisited):
         epsilon = 1e-10
         u = np.array(list(unvisited))
-        values = ((pm[loc, u] ** self.alpha) *
-                  ((1 / (dm[loc, u] + epsilon)) ** self.beta))
-        probs = values / values.sum()
+        pheromone = pm[loc, u] ** self.alpha
+        heuristic = (1 / (dm[loc, u] + epsilon)) ** self.beta
+        values = pheromone * heuristic
+        total = values.sum()
+        if total <= 0 or np.isnan(total):
+            probs = np.ones(len(u)) / len(u)
+        else:
+            probs = values / total
         return list(zip(u, probs))

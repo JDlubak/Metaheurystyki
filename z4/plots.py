@@ -44,7 +44,7 @@ def draw_best_route(ax, data, df_number, title_for_plot, filter_column):
 
 
 def extract_data_from_file_name(file_name: str) -> dict:
-    file_data = pd.read_csv(f'results2/{file_name}')
+    file_data = pd.read_csv(f'results/{file_name}')
     file_name = (file_name.replace('.csv', '')
                  .replace('results-', ''))
     name_parts = file_name.split('-')
@@ -69,7 +69,7 @@ def extract_data_from_file_name(file_name: str) -> dict:
 
 
 def extract_data():
-    result_folder = "results2/"
+    result_folder = "results/"
 
     data_list = []
 
@@ -96,7 +96,6 @@ def draw_comparison_plot(filter_column, value_list, df, df_number):
     }
     problem_size = len(df_number)
     main_df = df[df['count_'] == str(problem_size)]
-    main_df = main_df[main_df['beta'].isin(['10'])]
 
     comparison_avg = {}
     comparison_best = {}
@@ -205,7 +204,6 @@ def draw_time_plot(filter_column, value_list, df, df_number, ax):
     df['time'] = pd.to_numeric(df['time'], errors='coerce')
     problem_size = len(df_number)
     main_df = df[df['count_'] == str(problem_size)]
-    main_df = main_df[main_df['beta'].isin(['1', '3', '6'])]
     mean_times = []
     for val in value_list:
         filtered_df = main_df[main_df[filter_column] == val]
@@ -230,6 +228,8 @@ def draw_time_plot(filter_column, value_list, df, df_number, ax):
 
 df, df32, df80 = extract_data()
 
+df = df[df['p_random'] == '0']
+
 os.makedirs('plots', exist_ok=True)
 
 for d_f in [df32, df80]:
@@ -238,7 +238,7 @@ for d_f in [df32, df80]:
     name = 'A-n32-k5' if len(d_f) == 32 else 'A-n80-k10'
     fig.suptitle(f'Wpływ parametrów na czas wykonywania '
                  f'algorytmu ACO dla pliku {name}.txt', fontsize=16)
-    draw_time_plot('rho', ['0.1', '0.3', '0.7'], df, d_f,
+    draw_time_plot('rho', ['0.1', '0.3'], df, d_f,
                    axes_flat[0])
     draw_time_plot('alpha', ['0.5', '2', '5'], df, d_f,
                    axes_flat[1])
@@ -256,22 +256,27 @@ for d_f in [df32, df80]:
     plt.close()
 
 
-#draw_comparison_plot('p_random', ['0.01', '0.05', '0.1'], df, df32)
-#draw_comparison_plot('p_random', ['0.01', '0.05', '0.1'], df, df80)
+draw_comparison_plot('p_random', ['0'], df, df32)
+draw_comparison_plot('p_random', ['0'], df, df80)
+
 draw_comparison_plot('alpha', ['0.5', '2', '5'], df, df32)
 draw_comparison_plot('alpha', ['0.5', '2', '5'], df, df80)
 
-#draw_comparison_plot('rho', ['0.1', '0.3', '0.7'], df, df32)
-#draw_comparison_plot('rho', ['0.1', '0.3', '0.7'], df, df80)
+draw_comparison_plot('beta', ['5', '6', '8'], df, df32)
+draw_comparison_plot('beta', ['5', '6', '8'], df, df80)
 
-#draw_comparison_plot('col_size', ['15', '40', '80'], df, df32)
-#draw_comparison_plot('col_size', ['15', '40', '80'], df, df80)
+draw_comparison_plot('rho', ['0.1', '0.3'], df, df32)
+draw_comparison_plot('rho', ['0.1', '0.3'], df, df80)
 
-#draw_comparison_plot('iterations', ['100', '300', '600'], df, df32)
-#draw_comparison_plot('iterations', ['100', '300', '600'], df, df80)
+draw_comparison_plot('col_size', ['60', '100'], df, df32)
+draw_comparison_plot('col_size', ['60', '100'], df, df80)
 
-#draw_comparison_plot('alpha', ['0.5', '5'], df, df32)
-#draw_comparison_plot('alpha', ['0.5', '5'], df, df80)
+draw_comparison_plot('iterations', ['100'], df, df32)
+draw_comparison_plot('iterations', ['100'], df, df80)
+
+
+
+
 
 
 def compute_stats_max(df_input, param_cols, best_col='best'):
