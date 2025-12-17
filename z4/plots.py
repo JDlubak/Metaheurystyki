@@ -44,7 +44,7 @@ def draw_best_route(ax, data, df_number, title_for_plot, filter_column):
 
 
 def extract_data_from_file_name(file_name: str) -> dict:
-    file_data = pd.read_csv(f'results/{file_name}')
+    file_data = pd.read_csv(f'results2/{file_name}')
     file_name = (file_name.replace('.csv', '')
                  .replace('results-', ''))
     name_parts = file_name.split('-')
@@ -69,7 +69,7 @@ def extract_data_from_file_name(file_name: str) -> dict:
 
 
 def extract_data():
-    result_folder = "results/"
+    result_folder = "results2/"
 
     data_list = []
 
@@ -256,8 +256,22 @@ for d_f in [df32, df80]:
     plt.close()
 
 
-# draw_comparison_plot('alpha', ['0.5', '5'], df, df32)
-draw_comparison_plot('alpha', ['0.5'], df, df80)
+#draw_comparison_plot('p_random', ['0.01', '0.05', '0.1'], df, df32)
+#draw_comparison_plot('p_random', ['0.01', '0.05', '0.1'], df, df80)
+draw_comparison_plot('alpha', ['0.5', '2', '5'], df, df32)
+draw_comparison_plot('alpha', ['0.5', '2', '5'], df, df80)
+
+#draw_comparison_plot('rho', ['0.1', '0.3', '0.7'], df, df32)
+#draw_comparison_plot('rho', ['0.1', '0.3', '0.7'], df, df80)
+
+#draw_comparison_plot('col_size', ['15', '40', '80'], df, df32)
+#draw_comparison_plot('col_size', ['15', '40', '80'], df, df80)
+
+#draw_comparison_plot('iterations', ['100', '300', '600'], df, df32)
+#draw_comparison_plot('iterations', ['100', '300', '600'], df, df80)
+
+#draw_comparison_plot('alpha', ['0.5', '5'], df, df32)
+#draw_comparison_plot('alpha', ['0.5', '5'], df, df80)
 
 
 def compute_stats_max(df_input, param_cols, best_col='best'):

@@ -4,8 +4,15 @@ from ACO import run_algorithm, create_distance_matrix
 from file import read_file
 
 def run_single(params):
-    file, dm, df, p_random, alpha, beta, iteration, rho, col_size = params
-    run_algorithm(file, dm, df, p_random, alpha, beta, iteration, rho, col_size)
+    (task_id, file, dm, df,
+     p_random, alpha, beta,
+     iteration, rho, col_size) = params
+    run_algorithm(
+        file, dm, df,
+        p_random, alpha, beta,
+        iteration, rho, col_size,
+        task_id
+    )
     return (file, p_random, alpha, beta, iteration, rho, col_size)
 
 if __name__ == "__main__":
@@ -18,6 +25,7 @@ if __name__ == "__main__":
     col_sizes = [15, 40, 80]
 
     tasks = []
+    task_id = 1
 
     for file in files:
         df = read_file(file)
@@ -25,7 +33,13 @@ if __name__ == "__main__":
         for combination in product(p_randoms, alphas, betas, iterations, rhos, col_sizes):
             p_random, alpha, beta, iteration, rho, col_size = combination
             for _ in range(5):
-                tasks.append((file, dm, df, p_random, alpha, beta, iteration, rho, col_size))
+                tasks.append((
+                    task_id, 
+                    file, dm, df,
+                    p_random, alpha, beta,
+                    iteration, rho, col_size
+                ))
+                task_id += 1
 
     with ProcessPoolExecutor() as executor:
         futures = [executor.submit(run_single, task) for task in tasks]

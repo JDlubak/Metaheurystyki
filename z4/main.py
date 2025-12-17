@@ -15,12 +15,12 @@ if choice == "1":
     run_algorithm(file, dm, df, p_random, alpha, beta,
                   iterations, rho, col_size, plot=True)
 elif choice == "2":
-    files = ["A-n32-k5.txt", "A-n80-k10.txt"]
-    p_randoms = [0.01]
-    alphas = [8]
-    betas = [10]
-    iterations = [500]
-    rhos = [0.1]
+    files = ["A-n80-k10.txt"]
+    p_randoms = [0]
+    alphas = [2]
+    betas = [5]
+    iterations = [200]
+    rhos = [0.3]
     col_sizes = [100]
 
     for file in files:
@@ -29,7 +29,7 @@ elif choice == "2":
         for p_random, alpha, beta, iteration, rho, col_size in (
                 product(p_randoms, alphas, betas,
                         iterations, rhos, col_sizes)):
-            for _ in range(50):
+            for _ in range(20):
                 run_algorithm(file, dm, df, p_random, alpha, beta,
                               iteration, rho, col_size)
 else:

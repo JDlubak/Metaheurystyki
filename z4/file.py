@@ -57,12 +57,10 @@ def load_config():
 def save_run(best, worst, avg, time_elapsed,
              best_path, shortest, file_name_start):
     try:
-        os.mkdir('results') if not os.path.exists('results/') else None
-        file_count = sum(1 for file in os.listdir('results') if
-                         os.path.isfile(f'results/{file}')
-                         and file.startswith(file_name_start)
-                         and file.endswith('.csv'))
-        file_name = f'results/{file_name_start}-{file_count + 1}.csv'
+        result_folder = 'results'
+        os.mkdir(result_folder) if not (
+            os.path.exists(f'{result_folder}/')) else None
+        file_name = f'{result_folder}/{file_name_start}.csv'
     except Exception as e:
         print(f'An error occured: {e}')
         return

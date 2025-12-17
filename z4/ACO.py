@@ -27,14 +27,15 @@ def run_iteration(colony, distance_matrix, pheromone_matrix, rho):
     pheromone_matrix *= (1 - rho)
     for ant in colony:
         distance = ant.distance
-        start = ant.path[0]
-        for next_goal in ant.path[1:]:
-            pheromone_matrix[start, next_goal] += 1 / distance
-            pheromone_matrix[next_goal, start] += 1 / distance
+        for i in range(len(ant.path) - 1):
+            a = ant.path[i]
+            b = ant.path[i + 1]
+            pheromone_matrix[a, b] += 100 / distance
+            pheromone_matrix[b, a] += 100 / distance
 
 
 def run_algorithm(file, distance_matrix, df, p_random, alpha, beta,
-                  iterations, rho, col_size, plot=None):
+                  iterations, rho, col_size, task_id, plot=None):
     best = []
     worst = []
     avg = []
@@ -61,7 +62,7 @@ def run_algorithm(file, distance_matrix, df, p_random, alpha, beta,
         draw_route(df, best_path, shortest)
     else:
         count = file[3:5]
-        file_name_start = (f'results-{count}-{p_random}-{alpha}-{beta}-'
-                           f'{iterations}-{rho}-{col_size}')
+        file_name = (f'results-{count}-{p_random}-{alpha}-{beta}-'
+                           f'{iterations}-{rho}-{col_size}-{task_id}')
         save_run(best, worst, avg, time_elapsed,
-                 best_path, shortest, file_name_start)
+                 best_path, shortest, file_name)
