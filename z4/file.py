@@ -60,7 +60,12 @@ def save_run(best, worst, avg, time_elapsed,
         result_folder = 'results'
         os.mkdir(result_folder) if not (
             os.path.exists(f'{result_folder}/')) else None
-        file_name = f'{result_folder}/{file_name_start}.csv'
+        file_count = sum(1 for file in os.listdir('results') if
+                         os.path.isfile(f'results/{file}')
+                         and file.startswith(file_name_start)
+                         and file.endswith('.csv'))
+        file_name = (f'{result_folder}/{file_name_start}-'
+                     f'{file_count + 1}.csv')
     except Exception as e:
         print(f'An error occured: {e}')
         return

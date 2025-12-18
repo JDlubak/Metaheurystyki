@@ -192,6 +192,80 @@ def draw_comparison_plot(filter_column, value_list, df, df_number):
     plt.close(fig)
 
 
+def draw_small_comparision_plot(df, df32, df80):
+    fig, axes = plt.subplots(2, 2, figsize=(14, 10))
+
+    problems = [
+        (df32, "A-n32-k5.txt"),
+        (df80, "A-n80-k10.txt")
+    ]
+
+    for row_idx, (df_number, name) in enumerate(problems):
+        problem_size = len(df_number)
+        main_df = df[df['count_'] == str(problem_size)]
+        main_df = main_df[main_df['iterations'] == '200']
+        main_df = main_df[main_df['p_random'] == '0.01']
+        main_df = main_df[main_df['alpha'] == '2']
+        main_df = main_df[main_df['beta'] == '20']
+        main_df = main_df[main_df['rho'] == '0.3']
+        main_df = main_df[main_df['col_size'] == '100']
+        print(len(main_df))
+
+        # ---------- NAJLEPSZA TRASA ----------
+        best_row = main_df.loc[
+            pd.to_numeric(main_df['shortest'], errors='coerce').idxmin()
+        ]
+
+        draw_best_route(
+            axes[row_idx, 0],
+            best_row,
+            df_number,
+            f"– {name}",
+            filter_column=None
+        )
+
+        best_runs = []
+        avg_runs = []
+        worst_runs = []
+
+        for _, r in main_df.iterrows():
+            if isinstance(r['best'], pd.Series):
+                best_runs.append(r['best'])
+            if isinstance(r['avg'], pd.Series):
+                avg_runs.append(r['avg'])
+            if isinstance(r['worst'], pd.Series):
+                worst_runs.append(r['worst'])
+
+        ax = axes[row_idx, 1]
+
+        if best_runs:
+            ax.plot(pd.concat(best_runs, axis=1).mean(axis=1),
+                    label='Najlepsze', linewidth=2)
+        if avg_runs:
+            ax.plot(pd.concat(avg_runs, axis=1).mean(axis=1),
+                    label='Średnie', linewidth=2)
+        if worst_runs:
+            ax.plot(pd.concat(worst_runs, axis=1).mean(axis=1),
+                    label='Najgorsze', linewidth=2)
+
+        ax.set_title(f'Porównanie wyników – {name}')
+        ax.set_xlabel('Liczba iteracji')
+        ax.set_ylabel('Długość trasy')
+        ax.grid(True)
+        ax.legend()
+
+    fig.suptitle(
+        'Wpływ dużego współczynnika beta na działanie algorytmu '
+        'ACO',
+        fontsize=16
+    )
+
+    plt.tight_layout(rect=[0, 0, 1, 0.98])
+    plt.savefig('plots/aco_small_comparison_beta.png',
+                dpi=300, bbox_inches='tight')
+    plt.close(fig)
+
+
 def draw_time_plot(filter_column, value_list, df, df_number, ax):
     title_part = {
         'p_random': 'Parametr p_random',
@@ -226,9 +300,6 @@ def draw_time_plot(filter_column, value_list, df, df_number, ax):
     ax.grid(axis='y', linestyle='--', alpha=0.7)
 
 
-df, df32, df80 = extract_data()
-
-
 def plots():
     os.makedirs('plots', exist_ok=True)
 
@@ -256,7 +327,7 @@ def plots():
         plt.close()
 
 
-def defs():
+def draw_plots():
     draw_comparison_plot('p_random', ['0.01', '0.05', '0.1'], df, df32)
     draw_comparison_plot('p_random', ['0.01', '0.05', '0.1'], df, df80)
 
@@ -314,32 +385,35 @@ def compute_stats_max(df_input, param_cols, best_col='best'):
     return stats
 
 
-df_32 = df[df['beta'].isin(['1', '3', '6']) & (df['count_'] == '32')].copy()
-df_80 = df[df['beta'].isin(['1', '3', '6']) & (df['count_'] == '80')].copy()
+def make_stats():
+    df_32 = df[df['beta'].isin(['1', '3', '6']) & (df['count_'] == '32')].copy()
+    df_80 = df[df['beta'].isin(['1', '3', '6']) & (df['count_'] == '80')].copy()
 
-param_cols = ['p_random', 'alpha', 'beta', 'iterations', 'rho', 'col_size']
+    param_cols = ['p_random', 'alpha', 'beta', 'iterations', 'rho', 'col_size']
 
-stats_32 = compute_stats_max(df_32, param_cols)
-stats_80 = compute_stats_max(df_80, param_cols)
+    stats_32 = compute_stats_max(df_32, param_cols)
+    stats_80 = compute_stats_max(df_80, param_cols)
 
-os.makedirs('stats', exist_ok=True)
+    os.makedirs('stats', exist_ok=True)
 
-stats_32.to_csv(
-    'stats/stats_32.csv',
-    index=False,
-    sep=',',
-    decimal='.',
-    float_format='%.3f',
-    encoding='utf-8'
-)
+    stats_32.to_csv(
+        'stats/stats_32.csv',
+        index=False,
+        sep=',',
+        decimal='.',
+        float_format='%.3f',
+        encoding='utf-8'
+    )
 
-stats_80.to_csv(
-    'stats/stats_80.csv',
-    index=False,
-    sep=',',
-    decimal='.',
-    float_format='%.3f',
-    encoding='utf-8'
-)
+    stats_80.to_csv(
+        'stats/stats_80.csv',
+        index=False,
+        sep=',',
+        decimal='.',
+        float_format='%.3f',
+        encoding='utf-8'
+    )
 
-defs()
+
+df, df32, df80 = extract_data()
+draw_small_comparision_plot(df, df32, df80)
