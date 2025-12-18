@@ -21,7 +21,7 @@ elif choice == "2":
     alphas = [0.5, 2, 5]
     betas = [1, 3, 6]
     iterations = [100, 300, 600]
-    rhos = [0.3]
+    rhos = [0.1, 0.3, 0.7]
     col_sizes = [15, 40, 80]
     task_id = 2450
     for file in files:
@@ -37,9 +37,8 @@ elif choice == "2":
                              os.path.isfile(f'results/{file}')
                              and file.startswith(file_name_start)
                              and file.endswith('.csv'))
-            for _ in range(5 - file_count):
-                task_id = task_id + 1
+            for _ in range(5):
                 run_algorithm(file, dm, df, p_random, alpha, beta,
-                              iteration, rho, col_size, task_id)
+                              iteration, rho, col_size)
 else:
     print("Wrong.")

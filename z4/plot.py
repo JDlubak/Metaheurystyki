@@ -14,16 +14,6 @@ def draw_route(df, order, shortest):
 
     plt.xlabel("x")
     plt.ylabel("y")
-    plt.title("Wykres trasy")
+    plt.title(f'Wykres trasy'f' - Długość trasy: {shortest:.2f}')
     plt.grid(True)
     plt.show()
-
-    plt.figure(figsize=(8, 8))
-    x3 = df["x"].values
-    y3 = df["y"].values
-    plt.scatter(x3, y3)
-    for i, (xi, yi) in enumerate(zip(x3, y3)):
-        plt.text(xi, yi, str(i), fontsize=12)
-    plt.show()
-    print(shortest)
-

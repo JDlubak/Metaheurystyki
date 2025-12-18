@@ -35,7 +35,7 @@ def run_iteration(colony, distance_matrix, pheromone_matrix, rho):
 
 
 def run_algorithm(file, distance_matrix, df, p_random, alpha, beta,
-                  iterations, rho, col_size, task_id, plot=None):
+                  iterations, rho, col_size, plot=None):
     best = []
     worst = []
     avg = []
@@ -63,6 +63,6 @@ def run_algorithm(file, distance_matrix, df, p_random, alpha, beta,
     else:
         count = file[3:5]
         file_name = (f'results-{count}-{p_random}-{alpha}-{beta}-'
-                           f'{iterations}-{rho}-{col_size}-{task_id}')
+                           f'{iterations}-{rho}-{col_size}')
         save_run(best, worst, avg, time_elapsed,
                  best_path, shortest, file_name)

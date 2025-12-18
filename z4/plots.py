@@ -228,55 +228,52 @@ def draw_time_plot(filter_column, value_list, df, df_number, ax):
 
 df, df32, df80 = extract_data()
 
-df = df[df['p_random'] == '0']
 
-os.makedirs('plots', exist_ok=True)
+def plots():
+    os.makedirs('plots', exist_ok=True)
 
-for d_f in [df32, df80]:
-    fig, axes = plt.subplots(3, 2, figsize=(12, 16))
-    axes_flat = axes.flatten()
-    name = 'A-n32-k5' if len(d_f) == 32 else 'A-n80-k10'
-    fig.suptitle(f'Wpływ parametrów na czas wykonywania '
-                 f'algorytmu ACO dla pliku {name}.txt', fontsize=16)
-    draw_time_plot('rho', ['0.1', '0.3'], df, d_f,
-                   axes_flat[0])
-    draw_time_plot('alpha', ['0.5', '2', '5'], df, d_f,
-                   axes_flat[1])
-    draw_time_plot('beta', ['1', '3', '6'], df, d_f,
-                   axes_flat[2])
-    draw_time_plot('col_size', ['15', '40', '80'], df, d_f,
-                   axes_flat[3])
-    draw_time_plot('p_random', ['0.01', '0.05', '0.1'], df, d_f,
-                   axes_flat[4])
-    draw_time_plot('iterations', ['100', '300', '600'], df, d_f,
-                   axes_flat[5])
+    for d_f in [df32, df80]:
+        fig, axes = plt.subplots(3, 2, figsize=(12, 16))
+        axes_flat = axes.flatten()
+        name = 'A-n32-k5' if len(d_f) == 32 else 'A-n80-k10'
+        fig.suptitle(f'Wpływ parametrów na czas wykonywania '
+                     f'algorytmu ACO dla pliku {name}.txt', fontsize=16)
+        draw_time_plot('rho', ['0.1', '0.3', '0.7'], df, d_f,
+                       axes_flat[0])
+        draw_time_plot('alpha', ['0.5', '2', '5'], df, d_f,
+                       axes_flat[1])
+        draw_time_plot('beta', ['1', '3', '6'], df, d_f,
+                       axes_flat[2])
+        draw_time_plot('col_size', ['15', '40', '80'], df, d_f,
+                       axes_flat[3])
+        draw_time_plot('p_random', ['0.01', '0.05', '0.1'], df, d_f,
+                       axes_flat[4])
+        draw_time_plot('iterations', ['100', '300', '600'], df, d_f,
+                       axes_flat[5])
 
-    plt.tight_layout(rect=[0, 0, 1, 0.97])
-    plt.savefig(f'plots/time-{name}', dpi=300, bbox_inches="tight")
-    plt.close()
-
-
-draw_comparison_plot('p_random', ['0'], df, df32)
-draw_comparison_plot('p_random', ['0'], df, df80)
-
-draw_comparison_plot('alpha', ['0.5', '2', '5'], df, df32)
-draw_comparison_plot('alpha', ['0.5', '2', '5'], df, df80)
-
-draw_comparison_plot('beta', ['5', '6', '8'], df, df32)
-draw_comparison_plot('beta', ['5', '6', '8'], df, df80)
-
-draw_comparison_plot('rho', ['0.1', '0.3'], df, df32)
-draw_comparison_plot('rho', ['0.1', '0.3'], df, df80)
-
-draw_comparison_plot('col_size', ['60', '100'], df, df32)
-draw_comparison_plot('col_size', ['60', '100'], df, df80)
-
-draw_comparison_plot('iterations', ['100'], df, df32)
-draw_comparison_plot('iterations', ['100'], df, df80)
+        plt.tight_layout(rect=[0, 0, 1, 0.97])
+        plt.savefig(f'plots/time-{name}', dpi=300, bbox_inches="tight")
+        plt.close()
 
 
+def defs():
+    draw_comparison_plot('p_random', ['0.01', '0.05', '0.1'], df, df32)
+    draw_comparison_plot('p_random', ['0.01', '0.05', '0.1'], df, df80)
 
+    draw_comparison_plot('alpha', ['0.5', '2', '5'], df, df32)
+    draw_comparison_plot('alpha', ['0.5', '2', '5'], df, df80)
 
+    draw_comparison_plot('beta', ['1', '3', '6'], df, df32)
+    draw_comparison_plot('beta', ['1', '3', '6'], df, df80)
+
+    draw_comparison_plot('rho', ['0.1', '0.3', '0.7'], df, df32)
+    draw_comparison_plot('rho', ['0.1', '0.3', '0.7'], df, df80)
+
+    draw_comparison_plot('col_size', ['15', '40', '80'], df, df32)
+    draw_comparison_plot('col_size', ['15', '40', '80'], df, df80)
+
+    draw_comparison_plot('iterations', ['600', '300', '100'], df, df32)
+    draw_comparison_plot('iterations', ['600', '300', '100'], df, df80)
 
 
 def compute_stats_max(df_input, param_cols, best_col='best'):
@@ -286,9 +283,9 @@ def compute_stats_max(df_input, param_cols, best_col='best'):
         except Exception:
             return pd.NA
 
+    df_input = df_input.copy()
     df_input['best_max'] = df_input[best_col].apply(max_of_series)
-    df_input['best_max'] = pd.to_numeric(df_input['best_max'],
-                                         errors='coerce')
+    df_input['best_max'] = pd.to_numeric(df_input['best_max'], errors='coerce')
 
     stats = (
         df_input.groupby(param_cols)['best_max']
@@ -297,29 +294,52 @@ def compute_stats_max(df_input, param_cols, best_col='best'):
     )
 
     stats.columns = [
-        '_'.join(col).strip('_') if isinstance(col, tuple) else col for
-        col in stats.columns]
-    stats = stats.rename(columns={'min': 'shortest_route',
-                                  'mean': 'avg_route',
-                                  'max': 'longest_route'})
+        '_'.join(col).strip('_') if isinstance(col, tuple) else col
+        for col in stats.columns
+    ]
+
+    stats = stats.rename(columns={
+        'min': 'shortest_route',
+        'mean': 'avg_route',
+        'max': 'longest_route'
+    })
+
     numeric_cols = stats.select_dtypes(include='number').columns
-    stats[numeric_cols] = stats[numeric_cols].round(3)
+    stats[numeric_cols] = (
+        stats[numeric_cols]
+        .astype(float)
+        .round(3)
+    )
+
     return stats
 
 
-df_32 = df[df['beta'].isin(['1', '3', '6'])].copy()
-df_32 = df_32[df_32['count_'] == '32']
-df_80 = df[df['beta'].isin(['1', '3', '6'])].copy()
-df_80 = df_80[df_80['count_'] == '80']
-
+df_32 = df[df['beta'].isin(['1', '3', '6']) & (df['count_'] == '32')].copy()
+df_80 = df[df['beta'].isin(['1', '3', '6']) & (df['count_'] == '80')].copy()
 
 param_cols = ['p_random', 'alpha', 'beta', 'iterations', 'rho', 'col_size']
 
 stats_32 = compute_stats_max(df_32, param_cols)
-
 stats_80 = compute_stats_max(df_80, param_cols)
 
 os.makedirs('stats', exist_ok=True)
-stats_32.to_csv('stats/stats_32.csv', index=False)
-stats_80.to_csv('stats/stats_80.csv', index=False)
 
+stats_32.to_csv(
+    'stats/stats_32.csv',
+    index=False,
+    sep=',',
+    decimal='.',
+    float_format='%.3f',
+    encoding='utf-8'
+)
+
+stats_80.to_csv(
+    'stats/stats_80.csv',
+    index=False,
+    sep=',',
+    decimal='.',
+    float_format='%.3f',
+    encoding='utf-8'
+)
+
+defs()
