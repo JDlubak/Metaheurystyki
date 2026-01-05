@@ -16,11 +16,12 @@ def main():
 
         # Utworzenie i uruchomienie algorytmu
         algorytm = PSO(config, liczba_czastek=50, iteracje=100)
-        x, y, val = algorytm.uruchom()
+        x, y, val, time = algorytm.uruchom()
 
         print("\n--- WYNIKI KOŃCOWE ---")
         print(f"Znalezione minimum w punkcie: ({x:.4f}, {y:.4f})")
         print(f"Wartość funkcji: {val:.6f}")
+        print(f"Czas wykonania: {time:.4f} sekund\n")
 
     except ValueError as e:
         print(f"Błąd: {e}")

@@ -25,7 +25,8 @@ class Ptak:
 
 
     def oblicz_przystosowanie(self, func):
-        return func(self.ptak_x, self.ptak_y)
+        self.przystosowanie = func(self.ptak_x, self.ptak_y)
+        return self.przystosowanie
 
     def aktualizuj_predkosc(self, g_best_x, g_best_y):
         r1 = random.random()

@@ -13,12 +13,14 @@ FUNCTIONS = {
     1: {
         "name": "Beale Function",
         "func": beale_function,
-        "range": (-4.5, 4.5)
+        "range": (-4.5, 4.5),
+        "number": 1
     },
     2: {
         "name": "Himmelblau's Function",
         "func": himmelblaus_function,
-        "range": (-5, 5)
+        "range": (-5, 5),
+        "number": 2
     }
 }
 
