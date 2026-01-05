@@ -8,18 +8,14 @@ def zaladuj_parametry():
 
     try:
         parametry = json.load(open('config.json'))
-        funkcja = parametry['funkcja']
         liczba_czastek = parametry['liczba_czastek']
         iteracje = parametry['iteracje']
         inercja = parametry['inercja']
         stala_poznawcza = parametry['stala_poznawcza']
         stala_spoleczna = parametry['stala_spoleczna']
-        prog_skupienia = parametry['prog_skupienia']
 
         bledy = []
 
-        if funkcja not in (1, 2):
-            bledy.append('Zły wybór funkcji! Wybierz 1 lub 2.')
         if not (isinstance(liczba_czastek, int) and liczba_czastek > 0):
             bledy.append('Liczba cząstek musi być '
                          'liczbą całkowitą większą od 0.')
@@ -39,10 +35,6 @@ def zaladuj_parametry():
             # zgodnie z wykładem, nie ma tu górnego ograniczenia
             bledy.append('Stała społeczna musi być liczbą '
                          'większą lub równą 0.')
-        if not (isinstance(prog_skupienia, (int, float))
-                and prog_skupienia >= 0):
-            bledy.append('Próg skupienia musi być liczbą '
-                         'większą lub równą 0.')
         dodatkowe_pola = set(parametry.keys()) - pola
         if dodatkowe_pola:
             bledy.append(f'Niepoprawne pola: '
@@ -56,11 +48,11 @@ def zaladuj_parametry():
     except Exception as e:
         raise ValueError(f'Błąd ładowania config.json: {e}')
 
-    return (funkcja, liczba_czastek, iteracje, inercja,
-            stala_poznawcza, stala_spoleczna, prog_skupienia)
+    return (liczba_czastek, iteracje, inercja,
+            stala_poznawcza, stala_spoleczna)
 
 
-def zapisz_wartosci(najlepsze, najgorsze, srednie,
+def zapisz_wartosci(najlepsze, srednie, najgorsze,
                     mediany, odchylenia, parametry, czas):
     try:
         katalog = 'wyniki_PSO'
@@ -93,5 +85,4 @@ def zapisz_wartosci(najlepsze, najgorsze, srednie,
         df.to_csv(nazwa_pliku, index=False)
     except Exception as e:
         print(f'Wystąpił błąd podczas zapisu do {nazwa_pliku}: {e}')
-
 

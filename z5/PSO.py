@@ -20,7 +20,8 @@ class PSO:
 
         # Parametr do zapobiegania przedwczesnemu skupieniu w jednym obszarze przestrzeni zaraz po inicjalizacji
         # Jak blisko muszą być cząstki, żeby uznać, że "utknęły"
-        self.prog_skupienia = 0.5
+        self.prog_skupienia = 2
+        self.procent_restartu = 0.8
 
         # Inicjalizacja roju
         self.roj = []
