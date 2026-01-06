@@ -36,12 +36,11 @@ def wyswietl_szczegoly():
           "(opcja 3)")
     print("Do eksperymentów zostaną użyte następujące wartości "
           "parametrów:")
-    # przykładowe wartości, jeszcze ustalimy
-    print("- Liczba cząstek: 20, 50, 100")
-    print("- Liczba iteracji: 50, 100, 200")
-    print("- Inercja: 0.3, 0.5, 0.7")
-    print("- Stała poznawcza: 1.0, 1.5, 2.0")
-    print("- Stała społeczna: 0.5, 1.0, 1.5")
+    print("- Liczba cząstek: 10, 30, 80")
+    print("- Liczba iteracji: 25, 50, 100")
+    print("- Inercja: 0.2, 0.5, 0.8")
+    print("- Stała poznawcza: 0.3, 1.2, 2.0")
+    print("- Stała społeczna: 0.3, 1.2, 2.0")
     print("\nMamy zatem 3 x 3 x 3 x 3 x 3 = 243 kombinacje do "
           "przetestowania, każda kombinacja zostanie przetestowana 5 "
           "razy dla obu funkcji, co daje łącznie 2430 uruchomień "
