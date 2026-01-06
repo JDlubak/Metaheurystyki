@@ -61,11 +61,19 @@ class PSO:
                 ptak.ptak_y = random.uniform(self.bounds[0], self.bounds[1])
 
     def uruchom(self, komunikaty):
-        najlepsze = []
-        srednie = []
-        najgorsze = []
-        mediany = []
-        odchylenia = []
+        dane_analityczne = {
+            'najlepsze': [],
+            'srednie': [],
+            'najgorsze': [],
+            'odchylenia': [],
+            'kwantyle': {
+                0.25: [],
+                0.5: [],    # czyli po prostu mediana
+                0.75: [],
+                0.9: []
+            }
+        }
+
 
         if komunikaty:
             print(f"Rozpoczynam optymalizację rojem {self.liczba_czastek} cząstek...")
@@ -97,20 +105,24 @@ class PSO:
                 print(f"Iteracja {i + 1}: Najlepszy wynik = {self.g_best_wartosc:.5f}")
 
             # Zapisz najlepszy, średni, najgorszy wynik z iteracji
-            # oraz medianę i odchylenie standardowe
+            # oraz odchylenie standardowe i poszczególne kwantyle
+            # (wraz z medianą)
             wartosci = [ptak.przystosowanie for ptak in self.roj]
-            najlepsze.append(min(wartosci))
-            srednie.append(sum(wartosci) / len(wartosci))
-            najgorsze.append(max(wartosci))
-            mediany.append(np.median(wartosci))
-            odchylenia.append(np.std(wartosci))
+            dane_analityczne['najlepsze'].append(min(wartosci))
+            dane_analityczne['srednie'].append(sum(wartosci)
+                                               / len(wartosci))
+            dane_analityczne['najgorsze'].append(max(wartosci))
+            dane_analityczne['odchylenia'].append(np.std(wartosci))
+            kwantyle = np.quantile(wartosci, list(dane_analityczne['kwantyle'].keys()))
+            for k, v in zip(dane_analityczne['kwantyle'], kwantyle):
+                dane_analityczne['kwantyle'][k].append(v)
+
         czas_konca = time.time()
         czas_dzialania = czas_konca - czas_startu
 
         parametry = [self.numer_funkcji, self.liczba_czastek, self.iteracje,
                      self.inercja, self.stala_poznawcza,
                      self.stala_spoleczna]
-        zapisz_wartosci(najlepsze, srednie, najgorsze, mediany,
-                        odchylenia, parametry, czas_dzialania)
+        zapisz_wartosci(dane_analityczne, parametry, czas_dzialania)
 
         return self.g_best_x, self.g_best_y, self.g_best_wartosc, czas_dzialania

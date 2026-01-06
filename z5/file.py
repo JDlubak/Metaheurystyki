@@ -58,8 +58,7 @@ def konfiguruj_parametry(sposob_uruchomienia):
     return zaladuj_parametry()
 
 
-def zapisz_wartosci(najlepsze, srednie, najgorsze,
-                    mediany, odchylenia, parametry, czas):
+def zapisz_wartosci(dane_analityczne, parametry, czas):
     try:
         katalog = 'wyniki_PSO'
         os.makedirs(katalog, exist_ok=True)
@@ -79,11 +78,13 @@ def zapisz_wartosci(najlepsze, srednie, najgorsze,
         import pandas as pd
         df = pd.DataFrame(
             {
-                'najlepsze': najlepsze,
-                'najgorsze': najgorsze,
-                'srednie': srednie,
-                'mediany': mediany,
-                'odchylenia': odchylenia
+                'najlepsze': dane_analityczne['najlepsze'],
+                **{f'kwantyl_{int(k * 100)}': v
+                   for k, v in dane_analityczne['kwantyle'].items()
+                   },
+                'najgorsze': dane_analityczne['najgorsze'],
+                'srednie': dane_analityczne['srednie'],
+                'odchylenia': dane_analityczne['odchylenia'],
             }
         )
         df['czas'] = None
