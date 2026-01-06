@@ -52,6 +52,12 @@ def zaladuj_parametry():
             stala_poznawcza, stala_spoleczna)
 
 
+def konfiguruj_parametry(sposob_uruchomienia):
+    if sposob_uruchomienia == '1':
+        return 50, 100, 0.5, 1.5, 1.5
+    return zaladuj_parametry()
+
+
 def zapisz_wartosci(najlepsze, srednie, najgorsze,
                     mediany, odchylenia, parametry, czas):
     try:
@@ -59,7 +65,7 @@ def zapisz_wartosci(najlepsze, srednie, najgorsze,
         os.makedirs(katalog, exist_ok=True)
         start_nazwy = (f'{parametry[0]}-{parametry[1]}-{parametry[2]}-'
                        f'{parametry[3]}-{parametry[4]}-'
-                       f'{parametry[5]}-{parametry[6]}')
+                       f'{parametry[5]}')
         liczba_plikow = sum(1 for file in os.listdir(katalog) if
                             os.path.isfile(f'{katalog}/{file}')
                             and file.startswith(start_nazwy)
@@ -85,4 +91,3 @@ def zapisz_wartosci(najlepsze, srednie, najgorsze,
         df.to_csv(nazwa_pliku, index=False)
     except Exception as e:
         print(f'Wystąpił błąd podczas zapisu do {nazwa_pliku}: {e}')
-

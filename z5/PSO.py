@@ -2,11 +2,14 @@ import random
 import time
 
 import numpy as np
-from wielki_silny_ptak import Ptak
+
 from file import zapisz_wartosci
+from wielki_silny_ptak import Ptak
+
 
 class PSO:
-    def __init__(self, func_config, liczba_czastek=50, iteracje=100):
+    def __init__(self, func_config, liczba_czastek, iteracje,
+                 inercja, stala_poznawcza, stala_spoleczna):
         self.func = func_config['func']
         self.numer_funkcji = func_config["number"]
         self.bounds = func_config['range']
@@ -14,9 +17,9 @@ class PSO:
         self.iteracje = iteracje
 
         # Parametry roju
-        self.inercja = 0.5
-        self.stala_poznawcza = 1.5
-        self.stala_spoleczna = 1.5
+        self.inercja = inercja
+        self.stala_poznawcza = stala_poznawcza
+        self.stala_spoleczna = stala_spoleczna
 
         # Parametr do zapobiegania przedwczesnemu skupieniu w jednym obszarze przestrzeni zaraz po inicjalizacji
         # Jak blisko muszą być cząstki, żeby uznać, że "utknęły"
@@ -57,15 +60,15 @@ class PSO:
                 ptak.ptak_x = random.uniform(self.bounds[0], self.bounds[1])
                 ptak.ptak_y = random.uniform(self.bounds[0], self.bounds[1])
 
-    def uruchom(self):
+    def uruchom(self, komunikaty):
         najlepsze = []
         srednie = []
         najgorsze = []
         mediany = []
         odchylenia = []
 
-
-        print(f"Rozpoczynam optymalizację rojem {self.liczba_czastek} cząstek...")
+        if komunikaty:
+            print(f"Rozpoczynam optymalizację rojem {self.liczba_czastek} cząstek...")
         czas_startu = time.time()
         while self.czy_roj_skupiony():
             self.reset_czastek()
@@ -90,7 +93,7 @@ class PSO:
                 ptak.aktualizuj_pozycje(self.bounds)
 
             # Wypisz status co 10 iteracji
-            if (i + 1) % 10 == 0:
+            if (i + 1) % 10 == 0 and komunikaty:
                 print(f"Iteracja {i + 1}: Najlepszy wynik = {self.g_best_wartosc:.5f}")
 
             # Zapisz najlepszy, średni, najgorszy wynik z iteracji
@@ -106,7 +109,7 @@ class PSO:
 
         parametry = [self.numer_funkcji, self.liczba_czastek, self.iteracje,
                      self.inercja, self.stala_poznawcza,
-                     self.stala_spoleczna, self.prog_skupienia]
+                     self.stala_spoleczna]
         zapisz_wartosci(najlepsze, srednie, najgorsze, mediany,
                         odchylenia, parametry, czas_dzialania)
 
