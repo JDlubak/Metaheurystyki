@@ -94,11 +94,11 @@ def draw_comparison_plot(df, filter_column, value_list):
 
 
 all_parameter_list = {
-    'czastki': ['20', '50', '100'],
-    'iter': ['200', '100', '50'],
-    'iner': ['0.3', '0.5', '0.7'],
-    'stala_poznawcza': ['1.0', '1.5', '2.0'],
-    'stala_spoleczna': ['0.5', '1.0', '1.5']
+    'czastki': ['10', '30', '80'],
+    'iter': ['100', '50', '25'],
+    'iner': ['0.2', '0.5', '0.8'],
+    'stala_poznawcza': ['0.3', '1.2', '2.0'],
+    'stala_spoleczna': ['0.3', '1.2', '2.0']
 }
 
 data = extract_data()
