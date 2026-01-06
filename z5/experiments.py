@@ -5,11 +5,11 @@ from PSO import PSO
 
 def przeprowadz_eksperymenty():
     funkcje = [1, 2]
-    liczby_czastek = [20, 50, 100]
-    liczby_iteracji = [50, 100, 200]
-    inercje = [0.3, 0.5, 0.7]
-    stale_poznawcze = [1.0, 1.5, 2.0]
-    stale_spoleczne = [0.5, 1.0, 1.5]
+    liczby_czastek = [10, 30, 80]
+    liczby_iteracji = [25, 50, 100]
+    inercje = [0.2, 0.5, 0.8]
+    stale_poznawcze = [0.3, 1.2, 2.0]
+    stale_spoleczne = [0.3, 1.2, 2.0]
     licznik = 0
     for f in funkcje:
         config = load_function_config(f)

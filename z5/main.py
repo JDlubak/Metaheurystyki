@@ -4,7 +4,8 @@ from experiments import przeprowadz_eksperymenty
 from file import konfiguruj_parametry
 from functions import load_function_config
 from PSO import PSO
-from ui import menu_glowne, wyswietl_podsumowanie, wyswietl_szczegoly
+from ui import (menu_glowne, menu_pso, wyswietl_podsumowanie,
+                wyswietl_szczegoly)
 
 
 def wybierz_sposob_uruchomienia():
@@ -31,18 +32,8 @@ def main(parametry):
     inercja = parametry[2]
     stala_poznawcza = parametry[3]
     stala_spoleczna = parametry[4]
-    print("--- ALGORYTM ROJU CZĄSTEK (PSO) ---")
-    print(f"\nParametry:")
-    print(f"- Liczba cząstek: {liczba_czastek}")
-    print(f"- Liczba iteracji: {iteracje}")
-    print(f"- Inercja: {inercja}")
-    print(f"- Stała poznawcza: {stala_poznawcza}")
-    print(f"- Stała społeczna: {stala_spoleczna}\n")
-
-    print("Wybierz funkcję do optymalizacji:")
-    print("1. Funkcja Beale'a")
-    print("2. Funkcja Himmelblau")
-
+    menu_pso(liczba_czastek, iteracje, inercja, stala_poznawcza,
+             stala_spoleczna)
     try:
         wybor = int(input("Twój wybór (1 lub 2): "))
         config = load_function_config(wybor)
