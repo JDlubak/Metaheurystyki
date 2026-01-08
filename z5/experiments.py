@@ -6,7 +6,7 @@ from PSO import PSO
 def przeprowadz_eksperymenty():
     funkcje = [1, 2]
     liczby_czastek = [10, 30, 80]
-    liczby_iteracji = [25, 50, 100]
+    liczby_iteracji = [100, 200, 500]
     inercje = [0.2, 0.5, 0.8]
     stale_poznawcze = [0.3, 1.2, 2.0]
     stale_spoleczne = [0.3, 1.2, 2.0]
