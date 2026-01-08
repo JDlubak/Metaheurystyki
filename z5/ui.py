@@ -36,7 +36,7 @@ def wyswietl_szczegoly():
           "(opcja 3)")
     print("Do eksperymentów zostaną użyte następujące wartości "
           "parametrów:")
-    print("- Liczba cząstek: 10, 30, 80")
+    print("- Liczba cząstek: 10, 50, 100")
     print("- Liczba iteracji: 100, 200, 500")
     print("- Inercja: 0.2, 0.5, 0.8")
     print("- Stała poznawcza: 0.3, 1.2, 2.0")

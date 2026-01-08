@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import pandas as pd
 
 all_parameter_list = {
-    'czastki': ['10', '30', '80'],
+    'czastki': ['10', '50', '100'],
     'iter': ['500', '200', '100'],
     'iner': ['0.2', '0.5', '0.8'],
     'stala_poznawcza': ['0.3', '1.2', '2.0'],
