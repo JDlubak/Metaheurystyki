@@ -15,8 +15,9 @@ This repository contains assignments from the course “Metaheuristics and their
 ## Zadania
 
 ### Wykonane zadania:
-- [x] Zadanie 2 - symulowane wyżarzanie
-- [ ] Zadanie 3 - algorytm genetyczny
-- [ ] Zadanie 4 - algorytm mrówkowy
-- [ ] Zadanie 5 - rój cząstek
-- [ ] Zadanie 6 - rzeczywisty problem
+- [x] Zadanie 2 - symulowane wyżarzanie (sa_algorithm)
+- [X] Zadanie 3 - algorytm genetyczny (genetic_algorithm)
+- [X] Zadanie 4 - algorytm mrówkowy (pso_algorithm)
+- [X] Zadanie 5 - rój cząstek (pso_algorithm)
+- [X] Zadanie 6 - rzeczywisty problem — planowanie dostaw z 
+  uwzględnieniem okien czasowych (VRPTW)

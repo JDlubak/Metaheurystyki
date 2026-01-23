@@ -1,4 +1,4 @@
-from z2.functions import load_function_config
+from sa_algorithm.functions import load_function_config
 import matplotlib.pyplot as plt
 import numpy as np
 
