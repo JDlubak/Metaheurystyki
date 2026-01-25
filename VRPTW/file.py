@@ -2,6 +2,19 @@ import numpy as np
 
 
 def read_solomon_data(file_path: str) -> dict:
+    """
+    :param file_path: Path to the Solomon VRPTW data file.
+    :return: A dictionary containing all relevant data.
+
+    How to access the data? Example:
+    result = read_solomon_data(file_path)
+    result['instance_name'], result['vehicle_max_count'],
+    result['vehicle_capacity'], result['customers']
+    result['distance_matrix'].
+    If you want to access specific customer data:
+    home = result['customers'][0] - customer with ID 0 is a home depot
+    demand_1 = result['customers'][1]['demand'] - for accessing a field
+    """
     with open(file_path, 'r') as f:
         lines = [line.split() for line in f if line.strip()]
     instance_name = lines[0][0]
