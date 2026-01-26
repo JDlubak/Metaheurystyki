@@ -59,7 +59,7 @@ def read_solomon_data(file_path: str) -> dict:
     }
 
 
-def load_config() -> tuple[float, float, int, int, str, str, str]:
+def load_config() -> tuple[float, float, int, int, str, str]:
     try:
         config = json.load(open('config.json'))
         cp = config['crossing_probability']
@@ -68,7 +68,6 @@ def load_config() -> tuple[float, float, int, int, str, str, str]:
         i = config['iterations']
         cm = config['crossing_method']
         sm = config['selection_method']
-        mm = config['mutation_method']
         if not (isinstance(cp, (int, float)) and 0 <= cp <= 1):
             raise ValueError(
                 "crossing_probability must be a number in range 0–1.")
@@ -88,10 +87,6 @@ def load_config() -> tuple[float, float, int, int, str, str, str]:
             raise ValueError(
                 "selection_method must be either "
                 "'tournament' or 'ranking'.")
-        if mm not in ("single", "chunk"):
-            raise ValueError(
-                "mutation_method must be either "
-                "'single' or 'chunk'.")
     except Exception as e:
         raise ValueError(f'Error while loading config.json: {e}')
-    return cp, mp, p, i, cm, sm, mm
+    return cp, mp, p, i, cm, sm

@@ -12,8 +12,11 @@ class Individual:
         else:
             self.order = order
         self.adaptation = 0
+        self.evaluated = False
 
     def create_vehicles(self, data: dict):
+        if self.evaluated:
+            return
         self.vehicles = []
         due_date = data['customers'][0]['due_date']
         capacity = data['vehicle_capacity']
@@ -25,14 +28,12 @@ class Individual:
                 vehicle.add_customer(customer, dist_matrix)
             else:
                 vehicle.close_route(dist_matrix)
-                vehicle = optimize_route(vehicle, data)
                 self.vehicles.append(vehicle)
 
                 vehicle = Vehicle(capacity, due_date)
                 vehicle.add_customer(customer, dist_matrix)
 
         vehicle.close_route(dist_matrix)
-        vehicle = optimize_route(vehicle, data)
         self.vehicles.append(vehicle)
 
         updated_order = []
@@ -40,8 +41,12 @@ class Individual:
             updated_order.extend([cid for cid in v.route if cid != 0])
         self.order = updated_order
 
-    def evaluate(self):
+    def evaluate(self, data: dict):
+        if self.evaluated:
+            return
         self.value = 0
         for vehicle in self.vehicles:
+            vehicle = optimize_route(vehicle, data)
             self.value += 10000
             self.value += vehicle.total_distance
+        self.evaluated = True
