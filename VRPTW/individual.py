@@ -37,11 +37,6 @@ class Individual:
         vehicle.close_route(dist_matrix)
         self.vehicles.append(vehicle)
 
-        updated_order = []
-        for v in self.vehicles:
-            updated_order.extend([cid for cid in v.route if cid != 0])
-        self.order = updated_order
-
     def evaluate(self, data: dict):
         if self.evaluated:
             return
@@ -50,4 +45,8 @@ class Individual:
             vehicle = optimize_route(vehicle, data)
             self.value += 10000
             self.value += vehicle.total_distance
+        updated_order = []
+        for v in self.vehicles:
+            updated_order.extend([cid for cid in v.route if cid != 0])
+        self.order = updated_order
         self.evaluated = True

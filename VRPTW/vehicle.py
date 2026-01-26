@@ -57,16 +57,14 @@ class Vehicle:
             self.route.append(0)
 
 
-def optimize_route(vehicle: Vehicle, data: Dict[str, Any],
-                   force_repair: bool = False) -> Vehicle:
+def optimize_route(vehicle: Vehicle, data: Dict[str, Any]) -> Vehicle:
     best_route = list(vehicle.route)
     dist_matrix = data['dist_matrix']
     customers = data['customers']
     capacity = vehicle.capacity
     depot_due_date = vehicle.due_date
 
-    best_distance = vehicle.total_distance \
-        if not force_repair else (float('inf'))
+    best_distance = vehicle.total_distance
 
     is_improved = True
     while is_improved:
