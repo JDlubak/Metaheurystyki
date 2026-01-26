@@ -1,3 +1,5 @@
+import json
+
 import numpy as np
 
 
@@ -54,3 +56,41 @@ def read_solomon_data(file_path: str) -> dict:
         'customers': customers,
         'distance_matrix': dist_matrix
     }
+
+
+def load_config() -> tuple[float, float, int, int, str, str, str]:
+    try:
+        config = json.load(open('config.json'))
+        cp = config['crossing_probability']
+        mp = config['mutation_probability']
+        p = config['population size']
+        i = config['iterations']
+        cm = config['crossing_method']
+        sm = config['selection_method']
+        mm = config['mutation_method']
+        if not (isinstance(cp, (int, float)) and 0 <= cp <= 1):
+            raise ValueError(
+                "crossing_probability must be a number in range 0–1.")
+        if not (isinstance(mp, (int, float)) and 0 <= mp <= 1):
+            raise ValueError(
+                "mutation_probability must be a number in range 0–1.")
+        if not (isinstance(p, int) and p > 0):
+            raise ValueError(
+                "population_size must be a positive integer.")
+        if not (isinstance(i, int) and i > 0):
+            raise ValueError(
+                "iterations must be a positive integer.")
+        if cm not in ("single", "double"):
+            raise ValueError(
+                "crossing_method must be either 'single' or 'double'.")
+        if sm not in ("roulette", "ranking"):
+            raise ValueError(
+                "selection_method must be either "
+                "'roulette' or 'ranking'.")
+        if mm not in ("swap", "inversion"):
+            raise ValueError(
+                "mutation_method must be either "
+                "'swap' or 'inversion'.")
+    except Exception as e:
+        raise ValueError(f'Error while loading config.json: {e}')
+    return cp, mp, p, i, cm, sm, mm
