@@ -92,7 +92,7 @@ class GeneticAlgorithm:
         previous_best.value = previous_best_value
         self.population[worst_idx] = previous_best
 
-    def run(self) -> dict:
+    def run(self, print_result: bool = True) -> dict:
         start_time = time.time()
         self.create_population()
         for individual in self.population:
@@ -112,9 +112,13 @@ class GeneticAlgorithm:
                 best['value'] = current_best.value
                 best['order'] = list(current_best.order)
                 best['vehicles'] = list(current_best.vehicles)
-            print(
-                f'Iteration {i + 1}/{self.iterations} '
-                f'Best: {best['value']}')
+            if (i + 1) % 10 == 0 and print_result:
+                best_val = best['value']
+                distance = best_val % 10000
+                vehicles = best_val // 10000
+                print(
+                    f'Iteracja {i + 1}/{self.iterations}: '
+                    f'Liczba pojazdów: {vehicles:.0f} '
+                    f'Dystans: {distance:.3f}')
         end_time = time.time()
-        print(f'Elapsed time: {end_time - start_time}')
-        return best
+        return best, end_time - start_time

@@ -90,3 +90,9 @@ def load_config() -> tuple[float, float, int, int, str, str]:
     except Exception as e:
         raise ValueError(f'Error while loading config.json: {e}')
     return cp, mp, p, i, cm, sm
+
+
+def configurate_parameters(choice):
+    if choice == '1':
+        return 0.8, 0.2, 100, 500, "single", "tournament"
+    return load_config()
