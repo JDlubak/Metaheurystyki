@@ -1,15 +1,17 @@
 import math
 import random
+import time
 
-from individual import Individual
 from crossing_VRPTW import cross_algorithm
-from VRPTW.mutation_VRPTW import mutation_algorithm
+from individual import Individual
+from mutation_VRPTW import relocate_mutation
+from selection_VRPTW import selection_algorithm
 
 
 class GeneticAlgorithm:
     def __init__(self, population_size: int, number_of_clients: int,
-                 crossing_method: str, mutation_method: str,
-                 data: dict, crossing_probability: float,
+                 crossing_method: str, data: dict, iterations: int,
+                 crossing_probability: float, mutation_method: str,
                  mutation_probability: float, selection_method: str):
         self.population_size = population_size
         self.number_of_clients = number_of_clients
@@ -20,16 +22,12 @@ class GeneticAlgorithm:
         self.crossing_probability = crossing_probability
         self.mutation_probability = mutation_probability
         self.data = data
+        self.iterations = iterations
 
     def create_population(self):
         for _ in range(self.population_size):
             individual = Individual(self.number_of_clients)
             self.population.append(individual)
-
-    def sort_population(self):
-        self.population = sorted(self.population,
-                                 key=lambda individual:
-                                 individual.value)
 
     def cross_population(self, selection: list[Individual]):
         new_population = []
@@ -45,27 +43,66 @@ class GeneticAlgorithm:
                 new_population.append(child1)
                 new_population.append(child2)
             else:
-                new_population.append(parent1.copy())
-                new_population.append(parent2.copy())
-            if len(selection) % 2 == 1:
-                new_population.append(selection[-1].copy())
+                new_population.append(Individual(
+                    self.number_of_clients, list(parent1.order)))
+                new_population.append(Individual(
+                    self.number_of_clients, list(parent2.order)))
+        if len(selection) % 2 == 1:
+            new_population.append(Individual(
+                self.number_of_clients, list(selection[-1].order)))
+        self.population = new_population
 
     def mutate_population(self):
-        random.shuffle(self.population)
         mutated_count = math.ceil(self.mutation_probability * len(
             self.population))
-        for i in range(0, mutated_count):
-            mutation_algorithm(self.population[i], self.mutation_method)
+        indexes = random.sample(range(len(self.population)),
+                                mutated_count)
+        for idx in indexes:
+            relocate_mutation(self.population[idx],
+                              self.mutation_method)
 
     def run_iteration(self):
+        best_ind = min(self.population, key=lambda x: x.value)
+        previous_best_order = list(best_ind.order)
+        previous_best_value = best_ind.value
+        selection = selection_algorithm(self.population,
+                                        self.selection_method)
+        self.cross_population(selection)
+        self.mutate_population()
         for individual in self.population:
-            individual.create_vehicles()
+            individual.create_vehicles(self.data)
             individual.evaluate()
-        self.sort_population()
+        worst_idx = self.population.index(max(self.population,
+                                              key=lambda ind:
+                                              ind.value))
+        previous_best = Individual(self.number_of_clients,
+                                   previous_best_order)
+        previous_best.value = previous_best_value
+        self.population[worst_idx] = previous_best
 
+    def run(self) -> dict:
+        start_time = time.time()
+        self.create_population()
+        for individual in self.population:
+            individual.create_vehicles(self.data)
+            individual.evaluate()
+        best = {
+            'value': float('inf'),
+            'order': [],
+            'vehicles': []
+        }
 
-ga = GeneticAlgorithm(population_size=100, number_of_clients=10)
-ga.create_population()
-print(ga.population)
-
-
+        for i in range(self.iterations):
+            self.run_iteration()
+            current_best = min(self.population,
+                               key=lambda ind: ind.value)
+            if current_best.value < best['value']:
+                best['value'] = current_best.value
+                best['order'] = list(current_best.order)
+                best['vehicles'] = list(current_best.vehicles)
+            print(
+                f'Iteration {i + 1}/{self.iterations} '
+                f'Best : {best['value']}')
+        end_time = time.time()
+        print(f'Elapsed time: {end_time - start_time}')
+        return best

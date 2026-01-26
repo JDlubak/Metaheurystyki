@@ -1,24 +1,19 @@
 import random
 
-from VRPTW.individual import Individual
+from individual import Individual
 
 
-def swap_mutation(ind: Individual):
-    idx1, idx2 = random.sample(range(len(ind.order)), 2)
-    ind.order[idx1], ind.order[idx2] = ind.order[idx2], ind.order[idx1]
-
-
-def inversion_mutation(ind: Individual):
-    idx1, idx2 = sorted(random.sample(range(len(ind.order)), 2))
-    ind.order[idx1:idx2] = ind.order[idx1:idx2][::-1]
-
-
-def mutation_algorithm(individual: Individual, method: str):
-    if method not in ('swap', 'inversion'):
-        raise ValueError(f'Incorrect mutation method: {method}!')
-    if method == 'swap':
-        swap_mutation(individual)
-    elif method == 'inversion':
-        inversion_mutation(individual)
-    raise ValueError("Unexpected error has occurred "
-                     "in mutation_algorithm")
+def relocate_mutation(ind: Individual, method: str):
+    if len(ind.order) < 4:
+        return
+    if method == 'chunk':
+        chunk_size = random.randint(2, 3)
+    else:
+        chunk_size = 1
+    start_idx = random.randrange(len(ind.order) - chunk_size + 1)
+    chunk = []
+    for _ in range(chunk_size):
+        chunk.append(ind.order.pop(start_idx))
+    new_idx = random.randrange(len(ind.order) + 1)
+    for (i, customer) in enumerate(chunk):
+        ind.order.insert(new_idx + i, customer)

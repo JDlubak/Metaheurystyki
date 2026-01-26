@@ -64,7 +64,7 @@ def load_config() -> tuple[float, float, int, int, str, str, str]:
         config = json.load(open('config.json'))
         cp = config['crossing_probability']
         mp = config['mutation_probability']
-        p = config['population size']
+        p = config['population_size']
         i = config['iterations']
         cm = config['crossing_method']
         sm = config['selection_method']
@@ -84,14 +84,14 @@ def load_config() -> tuple[float, float, int, int, str, str, str]:
         if cm not in ("single", "double"):
             raise ValueError(
                 "crossing_method must be either 'single' or 'double'.")
-        if sm not in ("roulette", "ranking"):
+        if sm not in ("tournament", "ranking"):
             raise ValueError(
                 "selection_method must be either "
-                "'roulette' or 'ranking'.")
-        if mm not in ("swap", "inversion"):
+                "'tournament' or 'ranking'.")
+        if mm not in ("single", "chunk"):
             raise ValueError(
                 "mutation_method must be either "
-                "'swap' or 'inversion'.")
+                "'single' or 'chunk'.")
     except Exception as e:
         raise ValueError(f'Error while loading config.json: {e}')
     return cp, mp, p, i, cm, sm, mm

@@ -29,8 +29,11 @@ def pm_crossover(p1_order: List[int], p2_order: List[int],
                  start: int, end: int) -> List[int]:
     # First step
     size = len(p1_order)
-    child_order = [None] * len(size)
+    child_order = [None] * size
     child_order[start:end] = p1_order[start:end]
+
+    p2_map = {val: idx for idx, val in enumerate(p2_order)}
+
     # Second step
     for i in range(start, end):
         if p2_order[i] not in child_order:
@@ -38,7 +41,7 @@ def pm_crossover(p1_order: List[int], p2_order: List[int],
             curr_pos = i
             while start <= curr_pos < end:
                 val_to_find = p1_order[curr_pos]
-                curr_pos = p2_order.index(val_to_find)
+                curr_pos = p2_map[val_to_find]
             child_order[curr_pos] = curr_val
     # Third step
     for i in range(size):
@@ -56,7 +59,7 @@ def cross_algorithm(parent1: Individual, parent2: Individual,
         point = random.randint(1, size - 1)
         start, end = 0, point
     elif cross_method == 'double':
-        start, end = sorted(random.sample(range(size)), 2)
+        start, end = sorted(random.sample(range(size), 2))
     else:
         raise ValueError(f'Incorrect crossing method: {cross_method}!')
     order_1 = pm_crossover(parent1.order, parent2.order, start, end)
