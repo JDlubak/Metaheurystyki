@@ -1,5 +1,6 @@
 import random
-from vehicle import Vehicle, optimize_route
+
+from vehicle import optimize_route, Vehicle
 
 
 class Individual:

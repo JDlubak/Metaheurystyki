@@ -22,7 +22,7 @@ def selection_algorithm(population: list[Individual],
     selected = []
     if selection_type == 'tournament':
         for _ in range(population_size):
-            tournament = random.sample(population, 5)
+            tournament = random.sample(population, 8)
             winner = min(tournament, key=lambda x: x.value)
             selected.append(winner)
     elif selection_type == 'ranking':

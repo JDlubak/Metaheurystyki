@@ -1,4 +1,5 @@
 import json
+import os
 
 import numpy as np
 
@@ -94,5 +95,53 @@ def load_config() -> tuple[float, float, int, int, str, str]:
 
 def configurate_parameters(choice):
     if choice == '1':
-        return 0.8, 0.2, 100, 500, "single", "tournament"
+        return 0.8, 0.2, 200, 1000, "single", "tournament"
     return load_config()
+
+
+def save_run(instance_name, data, parameters, elapsed_time, vehicles):
+    try:
+        result_folder = 'wyniki_vrptw'
+        os.makedirs(result_folder, exist_ok=True)
+        name_start = (f'{instance_name}-{parameters[0]}-{parameters[1]}'
+                      f'-{parameters[2]}-{parameters[3]}-'
+                      f'{parameters[4]}-{parameters[5]}')
+        file_count = sum(1 for file in os.listdir(result_folder) if
+                         os.path.isfile(f'{result_folder}/{file}')
+                         and file.startswith(name_start)
+                         and file.endswith('.csv'))
+        file_name = (f'{result_folder}/{name_start}-'
+                     f'{file_count + 1}.csv')
+    except Exception as e:
+        print(f'Wystąpił błąd: {e}')
+        return
+    try:
+        import pandas as pd
+        df = pd.DataFrame(
+            {
+                'best': data[0],
+                'best_count': data[1],
+                'worst': data[2],
+                'worst_count': data[3],
+                'avg': data[4],
+                'avg_count': data[5],
+                'std': data[6],
+                'std_count': data[7]
+            }
+        )
+        df['time'] = None
+        df.loc[0, 'time'] = elapsed_time
+
+        routes_list = [str(v.route) for v in vehicles]
+        if len(routes_list) < len(df):
+            routes_list.extend([None] * (len(df) - len(routes_list)))
+        elif len(routes_list) > len(df):
+            new_rows = pd.DataFrame(
+                index=range(len(df), len(routes_list)),
+                columns=df.columns)
+            df = pd.concat([df, new_rows])
+        df['routes'] = routes_list[:len(df)]
+        df.to_csv(file_name, index=False)
+        print(f"Zapisano wyniki do: {file_name}")
+    except Exception as e:
+        print(f'Wystąpił błąd podczas zapisu do {file_name}: {e}')

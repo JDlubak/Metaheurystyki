@@ -67,4 +67,3 @@ def cross_algorithm(parent1: Individual, parent2: Individual,
     child1 = Individual(size, order_1)
     child2 = Individual(size, order_2)
     return child1, child2
-

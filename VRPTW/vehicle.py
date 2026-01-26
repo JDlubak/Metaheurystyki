@@ -13,8 +13,8 @@ class Vehicle:
         self.route: List[int] = [0]
 
     def compute_times(self, customer: Dict[str, Any],
-                      dist_matrix: np.ndarray) -> Tuple[
-                                                float, float, float]:
+                      dist_matrix: np.ndarray) \
+            -> Tuple[float, float, float]:
         last_id: int = self.route[-1]
         next_id: int = customer['id']
         travel_distance: float = dist_matrix[last_id][next_id]

@@ -1,8 +1,10 @@
 import math
 import random
+import statistics
 import time
 
 from crossing_VRPTW import cross_algorithm
+from file import save_run
 from individual import Individual
 from mutation_VRPTW import relocate_mutation
 from selection_VRPTW import selection_algorithm
@@ -11,8 +13,8 @@ from selection_VRPTW import selection_algorithm
 class GeneticAlgorithm:
     def __init__(self, population_size: int, number_of_clients: int,
                  crossing_method: str, data: dict, iterations: int,
-                 crossing_probability: float,
-                 mutation_probability: float, selection_method: str):
+                 crossing_probability: float, selection_method: str,
+                 mutation_probability: float, instance_name: str):
         self.population_size = population_size
         self.number_of_clients = number_of_clients
         self.population = []
@@ -22,6 +24,7 @@ class GeneticAlgorithm:
         self.mutation_probability = mutation_probability
         self.data = data
         self.iterations = iterations
+        self.instance_name = instance_name
 
     def create_population(self):
         for _ in range(self.population_size):
@@ -93,12 +96,20 @@ class GeneticAlgorithm:
         self.population[worst_idx] = previous_best
 
     def run(self, print_result: bool = True) -> dict:
+        best = []
+        best_count = []
+        worst = []
+        worst_count = []
+        avg = []
+        avg_count = []
+        std_dev = []
+        std_dev_count = []
         start_time = time.time()
         self.create_population()
         for individual in self.population:
             individual.create_vehicles(self.data)
             individual.evaluate(self.data)
-        best = {
+        overall_best = {
             'value': float('inf'),
             'order': [],
             'vehicles': []
@@ -108,17 +119,36 @@ class GeneticAlgorithm:
             self.run_iteration()
             current_best = min(self.population,
                                key=lambda ind: ind.value)
-            if current_best.value < best['value']:
-                best['value'] = current_best.value
-                best['order'] = list(current_best.order)
-                best['vehicles'] = list(current_best.vehicles)
+            if current_best.value < overall_best['value']:
+                overall_best['value'] = current_best.value
+                overall_best['order'] = list(current_best.order)
+                overall_best['vehicles'] = list(current_best.vehicles)
             if (i + 1) % 10 == 0 and print_result:
-                best_val = best['value']
+                best_val = overall_best['value']
                 distance = best_val % 10000
                 vehicles = best_val // 10000
                 print(
                     f'Iteracja {i + 1}/{self.iterations}: '
                     f'Liczba pojazdów: {vehicles:.0f} '
                     f'Dystans: {distance:.3f}')
-        end_time = time.time()
-        return best, end_time - start_time
+            values = [ind.value for ind in self.population]
+            distances = [val % 10000 for val in values]
+            counts = [int(val // 10000) for val in values]
+            best.append(overall_best['value'] % 10000)
+            best_count.append(overall_best['value'] // 10000)
+            worst.append(max(distances))
+            worst_count.append(max(counts))
+            avg.append(sum(distances) / len(distances))
+            avg_count.append(sum(counts) / len(counts))
+            std_dev.append(statistics.stdev(distances))
+            std_dev_count.append(statistics.stdev(counts))
+
+        elapsed_time = time.time() - start_time
+        data = [best, best_count, worst, worst_count,
+                avg, avg_count, std_dev, std_dev_count]
+        parameters = [self.population_size, self.iterations,
+                      self.crossing_probability, self.crossing_method,
+                      self.mutation_probability, self.selection_method]
+        save_run(self.instance_name, data, parameters, elapsed_time,
+                 overall_best['vehicles'])
+        return overall_best, elapsed_time

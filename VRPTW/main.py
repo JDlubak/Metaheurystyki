@@ -33,14 +33,15 @@ def main(params):
                mutation_probability, population_size, iterations)
     try:
         choice = int(input("Twój wybór (1/2/3): "))
+        catalog = 'solomon-100/In'
         if choice == 1:
-            pass
+            file = "r101.txt"
         elif choice == 2:
-            pass
+            file = "c101.txt"
         elif choice == 3:
-            pass
-        print("Wybrano: ")
-        data = read_solomon_data('solomon-100/In/c101.txt')
+            file = "rc101.txt"
+        print(f"Wybrano: {file[:-4]}")
+        data = read_solomon_data(f'{catalog}/{file}')
         number_of_clients = len(data['customers']) - 1
         ga = GeneticAlgorithm(population_size=population_size,
                               crossing_method=crossing_method,
@@ -49,7 +50,8 @@ def main(params):
                               crossing_probability=crossing_probability,
                               iterations=iterations,
                               number_of_clients=number_of_clients,
-                              data=data)
+                              data=data,
+                              instance_name=data['instance_name'])
         best, elapsed_time = ga.run()
         see_results(best, elapsed_time, data)
     except ValueError as e:
@@ -66,9 +68,3 @@ if __name__ == "__main__":
         parameters = configurate_parameters(mode_choice)
         while True:
             main(parameters)
-
-
-
-
-
-

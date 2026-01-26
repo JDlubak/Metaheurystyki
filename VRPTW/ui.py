@@ -30,10 +30,10 @@ def see_details():
           "Określa, jaki procent osobników będzie mutował w "
           "każdej iteracji. Domyślna wartość - 0.2.")
     print("3. Liczba iteracji (iterations).: Określa, ile iteracji "
-          "algorytmu uruchomimy. Domyślna wartość - 500.")
+          "algorytmu uruchomimy. Domyślna wartość - 1000.")
     print("4. Rozmiar populacji (population_size): Określa, "
           "ile osobników znajdzie się w populacji. "
-          "Domyślna wartość - 100.")
+          "Domyślna wartość - 200.")
     print("5. Metoda selekcji (selection_method). Określa, czy do "
           "selekcji będziemy korzystać z turnieju (tournament), "
           "czy z rankingu (ranking)."
