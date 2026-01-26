@@ -99,7 +99,8 @@ def configurate_parameters(choice):
     return load_config()
 
 
-def save_run(instance_name, data, parameters, elapsed_time, vehicles):
+def save_run(instance_name, data, parameters, elapsed_time, vehicles,
+             task_id):
     try:
         result_folder = 'wyniki_vrptw'
         os.makedirs(result_folder, exist_ok=True)
@@ -110,8 +111,9 @@ def save_run(instance_name, data, parameters, elapsed_time, vehicles):
                          os.path.isfile(f'{result_folder}/{file}')
                          and file.startswith(name_start)
                          and file.endswith('.csv'))
+        task_id = f'-{str(task_id)}' if task_id else ''
         file_name = (f'{result_folder}/{name_start}-'
-                     f'{file_count + 1}.csv')
+                     f'{file_count + 1}{task_id}.csv')
     except Exception as e:
         print(f'Wystąpił błąd: {e}')
         return
@@ -142,6 +144,7 @@ def save_run(instance_name, data, parameters, elapsed_time, vehicles):
             df = pd.concat([df, new_rows])
         df['routes'] = routes_list[:len(df)]
         df.to_csv(file_name, index=False)
-        print(f"Zapisano wyniki do: {file_name}")
+        if not task_id:
+            print(f"Zapisano wyniki do: {file_name}")
     except Exception as e:
         print(f'Wystąpił błąd podczas zapisu do {file_name}: {e}')

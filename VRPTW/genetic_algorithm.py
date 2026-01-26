@@ -95,7 +95,8 @@ class GeneticAlgorithm:
         previous_best.value = previous_best_value
         self.population[worst_idx] = previous_best
 
-    def run(self, print_result: bool = True) -> dict:
+    def run(self, print_result: bool = True, task_id: int = None) -> (
+            dict):
         best = []
         best_count = []
         worst = []
@@ -150,5 +151,5 @@ class GeneticAlgorithm:
                       self.crossing_probability, self.crossing_method,
                       self.mutation_probability, self.selection_method]
         save_run(self.instance_name, data, parameters, elapsed_time,
-                 overall_best['vehicles'])
+                 overall_best['vehicles'], task_id)
         return overall_best, elapsed_time

@@ -3,6 +3,7 @@ import sys
 from file import configurate_parameters, read_solomon_data
 from genetic_algorithm import GeneticAlgorithm
 from ui import main_menu, menu_vrptw, see_details, see_results
+from run_experiments import start_experiments
 
 
 def choose_mode():
@@ -63,7 +64,7 @@ def main(params):
 if __name__ == "__main__":
     mode_choice = choose_mode()
     if mode_choice == '3':
-        pass
+        start_experiments()
     else:
         parameters = configurate_parameters(mode_choice)
         while True:
