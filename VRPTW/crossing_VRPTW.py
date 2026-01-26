@@ -1,6 +1,8 @@
 import random
 from typing import List
 
+from individual import Individual
+
 
 # Crossover algorithm for VRPTW has to be adapted, we cannot use
 # implementation directly from genetic_algorithm created before,
@@ -23,58 +25,43 @@ from typing import List
 # 3. Filling remaining positions using Parent 2.
 
 
-def pm_crossover(p1: List[int], p2: List[int], start: int, end: int) \
-        -> tuple[List[int], List[int]]:
+def pm_crossover(p1_order: List[int], p2_order: List[int],
+                 start: int, end: int) -> List[int]:
     # First step
-    child = [None] * len(p1)
-    child[start:end] = p1[start:end]
+    size = len(p1_order)
+    child_order = [None] * len(size)
+    child_order[start:end] = p1_order[start:end]
     # Second step
     for i in range(start, end):
-        if p2[i] not in child:
-            curr_val = p2[i]
+        if p2_order[i] not in child_order:
+            curr_val = p2_order[i]
             curr_pos = i
             while start <= curr_pos < end:
-                val_to_find = p1[curr_pos]
-                curr_pos = p2.index(val_to_find)
-            child[curr_pos] = curr_val
+                val_to_find = p1_order[curr_pos]
+                curr_pos = p2_order.index(val_to_find)
+            child_order[curr_pos] = curr_val
     # Third step
-    for i in range(len(p1)):
-        if child[i] is None:
-            child[i] = p2[i]
-    return child
+    for i in range(size):
+        if child_order[i] is None:
+            child_order[i] = p2_order[i]
+    return child_order
 
 
-def single_point_crossing(p1: List[int], p2: List[int]) \
-        -> tuple[List[int], List[int]]:
-    point = random.randint(1, len(p1) - 1)
-    first_child = pm_crossover(p1, p2, 0, point)
-    second_child = pm_crossover(p2, p1, 0, point)
-    return first_child, second_child
-
-
-def double_point_crossing(p1: List[int], p2: List[int]) \
-        -> tuple[List[int], List[int]]:
-    point1, point2 = sorted(random.sample(range(1, len(p1)), 2))
-    first_child = pm_crossover(p1, p2, point1, point2)
-    second_child = pm_crossover(p2, p1, point1, point2)
-    return first_child, second_child
-
-
-def cross_algorithm(parent1: List[int], parent2: List[int],
-                    method: str) -> tuple[List[int], List[int]]:
-    if method not in ('single', 'double'):
-        raise ValueError(f'Incorrect crossing method: {method}!')
-    if len(parent1) != len(parent2):
+def cross_algorithm(parent1: Individual, parent2: Individual,
+                    cross_method: str) -> tuple[Individual, Individual]:
+    if len(parent1.order) != len(parent2.order):
         raise ValueError(f'Parents have different length!')
-    if method == 'single':
-        return single_point_crossing(parent1, parent2)
-    elif method == 'double':
-        return double_point_crossing(parent1, parent2)
-    raise ValueError("Unexpected error has occurred in cross_algorithm")
+    size = len(parent1.order)
+    if cross_method == 'single':
+        point = random.randint(1, size - 1)
+        start, end = 0, point
+    elif cross_method == 'double':
+        start, end = sorted(random.sample(range(size)), 2)
+    else:
+        raise ValueError(f'Incorrect crossing method: {cross_method}!')
+    order_1 = pm_crossover(parent1.order, parent2.order, start, end)
+    order_2 = pm_crossover(parent2.order, parent1.order, start, end)
+    child1 = Individual(size, order_1)
+    child2 = Individual(size, order_2)
+    return child1, child2
 
-
-p1 = list(range(15))
-random.shuffle(p1)
-p2 = list(range(15))
-print(f'Parent1 {p1}\nParent2 {p2}')
-print(cross_algorithm(p1, p2, method='double'))

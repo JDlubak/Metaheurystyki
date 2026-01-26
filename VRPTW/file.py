@@ -37,6 +37,7 @@ def read_solomon_data(file_path: str) -> dict:
         due_date = float(line[5])
         service_time = float(line[6])
         customers[customer_id] = {
+            'id': customer_id,
             'x': x_coord,
             'y': y_coord,
             'demand': demand,
@@ -54,7 +55,7 @@ def read_solomon_data(file_path: str) -> dict:
         'vehicle_max_count': vehicle_max_count,
         'vehicle_capacity': vehicle_capacity,
         'customers': customers,
-        'distance_matrix': dist_matrix
+        'dist_matrix': dist_matrix
     }
 
 
