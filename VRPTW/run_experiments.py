@@ -30,8 +30,8 @@ def run_single(params):
 
 def start_experiments():
     files = ["r101.txt", "c101.txt", "rc101.txt"]
-    iters = [100, 300, 1000]
-    populations = [40, 100, 200]
+    iters = [80, 90, 100]
+    populations = [10, 20, 30]
     cps = [0.6, 0.8, 1.0]
     mps = [0.05, 0.1, 0.2]
     selections = ["ranking", "tournament"]
