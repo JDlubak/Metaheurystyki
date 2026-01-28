@@ -36,11 +36,11 @@ def see_details():
           "Domyślna wartość - 200.")
     print("5. Metoda selekcji (selection_method). Określa, czy do "
           "selekcji będziemy korzystać z turnieju (tournament), "
-          "czy z rankingu (ranking)."
+          "czy z rankingu (ranking). "
           "Domyślnie - tournament.")
     print("6. Metoda krzyżowania: Określa, czy do "
           "krzyżowania będziemy korzystać z krzyżowania "
-          "jednopunktowego (single), czy dwupunktowego (double)."
+          "jednopunktowego (single), czy dwupunktowego (double). "
           "Domyślnie - single")
     print("\nMożesz uruchomić algorytm z domyślnymi parametrami "
           "(opcja 1), załadować je z pliku config.json (opcja 2) lub "
@@ -50,7 +50,7 @@ def see_details():
           "parametrów:")
     print("- Prawdopodobieństwo krzyżowania: 0.6, 0.8, 1.0")
     print("- Prawdopodobieństwo mutacji: 0.01, 0.1, 0.3, 0.7")
-    print("- Rozmiar populacji - 50, 200, 400")
+    print("- Rozmiar populacji - 20, 60, 150")
     print("- Liczba iteracji - 2000")
     print("- Metody krzyżowania i selekcji - wszystkie 4.")
     print("\nMamy zatem 3 x 4 x 3 x 4 = 432 kombinacje do "
