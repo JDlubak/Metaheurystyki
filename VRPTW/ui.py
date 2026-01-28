@@ -49,13 +49,13 @@ def see_details():
     print("Do eksperymentów zostaną użyte następujące wartości "
           "parametrów:")
     print("- Prawdopodobieństwo krzyżowania: 0.6, 0.8, 1.0")
-    print("- Prawdopodobieństwo krzyżowania: 0.05, 0.1, 0.2")
-    print("- Rozmiar populacji - 40, 100, 200")
-    print("- Liczba iteracji - 100, 300, 1000")
+    print("- Prawdopodobieństwo mutacji: 0.01, 0.1, 0.3, 0.7")
+    print("- Rozmiar populacji - 50, 200, 400")
+    print("- Liczba iteracji - 2000")
     print("- Metody krzyżowania i selekcji - wszystkie 4.")
-    print("\nMamy zatem 3 x 3 x 3 x 3 x 4 = 324 kombinacje do "
+    print("\nMamy zatem 3 x 4 x 3 x 4 = 432 kombinacje do "
           "przetestowania, każda kombinacja zostanie przetestowana 5 "
-          "razy dla trzech plików, co daje łącznie 4860 "
+          "razy dla trzech plików, co daje łącznie 2160 "
           "uruchomień algorytmu.")
     print("Wybierz odpowiednią opcję z menu głównego.")
     return

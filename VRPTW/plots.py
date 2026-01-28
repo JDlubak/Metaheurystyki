@@ -165,7 +165,6 @@ def draw_time_subplot(ax, df, filter_column, value_list, title):
     mean_times = []
     for val in value_list:
         filtered = df[df[filter_column] == val]
-        print(len(filtered))
         mean_times.append(filtered['time'].mean())
     ax.bar(value_list, mean_times, color='skyblue', edgecolor='black')
     ax.set_title(title, fontsize=11, fontweight='bold')
